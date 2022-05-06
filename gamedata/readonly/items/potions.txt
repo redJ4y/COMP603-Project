@@ -1,0 +1,112 @@
+Notes: stat types are HP, DM, APM, PROT, and AGIL
+
+--Common Potions ~ Rarity 1-2 (10)--
+
+new:
+	name==Basic Health Potion
+	desc==Always handy.
+	rarity==1
+	stat==HP
+	mod==50
+new:
+	name==Blood-brewed Potion
+	desc==Brewed to provide strength.
+	rarity==2
+	stat==DM
+	mod==1
+new:
+	name==Blood-brewed Potion
+	desc==Brewed to refine one's motor skills.
+	rarity==2
+	stat==APM
+	mod==1
+new:
+	name==Basic Health Potion
+	desc==Always handy. This is a good one.
+	rarity==1
+	stat==HP
+	mod==60
+new:
+	name==Potion of Attack
+	desc==For the weak.
+	rarity==1
+	stat==DM
+	mod==2
+new:
+	name==Potion of Skill
+	desc==Refines weapon skill.
+	rarity==1
+	stat==APM
+	mod==2
+new:
+	name==Potion of Agility
+	desc==Become quick on your feet.
+	rarity==1
+	stat==AGIL
+	mod==1
+new:
+	name==Common Health Potion
+	desc==A must have.
+	rarity==2
+	stat==HP
+	mod==70
+new:
+	name==Common Health Potion
+	desc==A must have. This is a good one.
+	rarity==2
+	stat==HP
+	mod==80
+new:
+	name==Advanced Agility Potion
+	desc==Become quick on your feet.
+	rarity==2
+	stat==AGIL
+	mod==2
+
+--Rare Potions ~ Rarity 3-4 (5)--
+
+new:
+	name==Advanced Health Potion
+	desc==Always a welcome sight.
+	rarity==3
+	stat==HP
+	mod==100
+new:
+	name==Advanced Attack Potion
+	desc==Expert brewed. For the weak.
+	rarity==3
+	stat==DM
+	mod==3
+new:
+	name==Advanced Skill Potion
+	desc==Expert brewed. Refines weapon skill.
+	rarity==3
+	stat==APM
+	mod==3
+new:
+	name==Paladin's Potion
+	desc==Brewed for the toughest warriors.
+	rarity==4
+	stat==PROT
+	mod==2
+new:
+	name==Assassin's Potion
+	desc==To move quickly and quietly.
+	rarity==4
+	stat==AGIL
+	mod==4
+
+--Very Rare Potions ~ Rarity 5 (2)--
+
+new:
+	name==Witches Attack Potion
+	desc==Hopefully the brewer is long gone.
+	rarity==5
+	stat==DM
+	mod==8
+new:
+	name==Glistening Health Potion
+	desc==A beautiful sight.
+	rarity==5
+	stat==HP
+	mod==270

@@ -1,0 +1,127 @@
+--Common Armor ~ Rarity 1-2 (10)--
+
+new:
+	name==Leather Chestguard
+	desc==Basic but well crafted and lightweight.
+	rarity==1
+	prot==5
+	agil==32
+	dur==20
+new:
+	name==Steel Chestplate
+	desc==Tough but heavy.
+	rarity==2
+	prot==20
+	agil==0
+	dur==35
+new:
+	name==Chainmail Chestguard
+	desc==A balanced piece of kit.
+	rarity==2
+	prot==15
+	agil==18
+	dur==30
+new:
+	name==Worn Gambeson
+	desc==Lightweight but not very protective.
+	rarity==1
+	prot==6
+	agil==30
+	dur==15
+new:
+	name==Leather Gambeson
+	desc==Tough and lightweight.
+	rarity==2
+	prot==8
+	agil==30
+	dur==20
+new:
+	name==Snakeskin Armor
+	desc==Who even made this?
+	rarity==1
+	prot==2
+	agil==32
+	dur==10
+new:
+	name==Villager Patrol Gear
+	desc==Liveable protective clothing.
+	rarity==1
+	prot==9
+	agil==20
+	dur==20
+new:
+	name==Hide Robe
+	desc==Grody but effective.
+	rarity==1
+	prot==10
+	agil==18
+	dur==15
+new:
+	name==Mastercraft Gambeson
+	desc==Well crafted, tough, and lightweight.
+	rarity==2
+	prot==12
+	agil==30
+	dur==20
+new:
+	name==Steel Armorings
+	desc==A variety of protective plates.
+	rarity==2
+	prot==23
+	agil==10
+	dur==35
+
+--Rare Armor ~ Rarity 3-4 (5)--
+
+new:
+	name==Forged Breast Plate
+	desc==Crafted by a skilled blacksmith.
+	rarity==3
+	prot==25
+	agil==12
+	dur==40
+new:
+	name==Enchanted Gambeson
+	desc==It appears weightless.
+	rarity==3
+	prot==18
+	agil==54
+	dur==35
+new:
+	name==Assassin's Cloak
+	desc==Crafted for an agile fighter.
+	rarity==3
+	prot==20
+	agil==50
+	dur==35
+new:
+	name==Mastercraft Plate Armor
+	desc==A full-body suit of intricate steel plates.
+	rarity==4
+	prot==34
+	agil==0
+	dur==40
+new:
+	name==Mastercraft Chainmail Cloak
+	desc==The intricate chains leave nothing unprotected.
+	rarity==4
+	prot==28
+	agil==28
+	dur==40
+
+--Very Rare Armor ~ Rarity 5 (2)--
+
+new:
+	name==Dragonscale Armor
+	desc==An impossible feat of craftsmanship.
+	rarity==5
+	prot==35
+	agil==18
+	dur==60
+new:
+	name==Ghostly Cloak
+	desc==It's moving...
+	rarity==5
+	prot==20
+	agil==72
+	dur==60

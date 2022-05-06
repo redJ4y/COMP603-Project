@@ -1,0 +1,269 @@
+Notes: enemy types are WILD_ANIMAL, GOBLIN, UNDEAD, TROLL, DRAGON, and GHOST
+             Rarities:     1-2       1-3     1-2     3-4    4-5         1-5
+     Occurances (/30):      8         5       8       3      2           4
+Trap Notes: stat types are HP, DM, APM, PROT, and AGIL
+Merchant Notes: inventory rarity can be 1-5
+
+--Common Scenes (20)--
+
+new:
+	view==It looks like a peaceful clearing.
+	desc==It's sunny and peaceful. There's a light breeze.
+	enem==WILD_ANIMAL
+	trap==false
+	merch==false
+	pe==true
+		desc==You relax and smell the flowers.
+		hp==30
+new:
+	view==You can make out a small cave in the hills.
+        desc==It doesn't look like anyone has been here for many years.
+        enem==UNDEAD
+        trap==false
+        merch==true
+                name==Hiding Villager
+                desc==Might as well chat with them.
+                invrarity==1
+        pe==false
+new:
+	view==There's nothing but thick forest.
+        desc==It's cold and foggy under the tree cover.
+        enem==WILD_ANIMAL
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You spot a small lake in the wilderness.
+        desc==It's a peaceful spot... It's far from everything.
+        enem==WILD_ANIMAL
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You spot a narrow stream.
+        desc==You follow the stream to a small clearing...
+        enem==WILD_ANIMAL
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==There's an old rundown cabin.
+        desc==Whoever lived here left a long time ago...
+        enem==UNDEAD
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You see an ancient tomb among the trees.
+        desc==You hear whispers all around...
+        enem==UNDEAD
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You see a ramshackle entrance in the side of a hill.
+        desc==There is half eaten food on the ground. Something lives here...
+        enem==GOBLIN
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You see a ramshackle wooden lookout tower in a field of boulders.
+        desc==As you near you see small paths weaving through the field.
+        enem==GOBLIN
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You see a goblin scamper into the woods.
+        desc==You enter the woods... Where did the goblin go?
+        enem==GOBLIN
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You see a wide open prarie, what a beautiful sight.
+        desc==It seems peaceful... You take in the view.
+        enem==WILD_ANIMAL
+        trap==false
+        merch==false
+        pe==true
+		desc==You relax and smell the flowers.
+		hp==40
+new:
+	view==There's a grove of yellow and orange aspen trees. 
+        desc==The leaves rattle in the breeze. You could settle down here...
+        enem==WILD_ANIMAL
+        trap==false
+        merch==false
+        pe==true
+		desc==You relax and take in the scenery.
+		hp==40
+new:
+	view==You see large pile of rocks in the wilderness.
+        desc==Is it natural or did something make it?
+        enem==WILD_ANIMAL
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You see a rocky peak, far above the other hills.
+        desc==You climb to the top. You can see for miles from up here!
+        enem==WILD_ANIMAL
+        trap==false
+        merch==false
+        pe==true
+		desc==You relax and take in the scenery.
+		hp==40
+new:
+	view==You see the old ruins of a village.
+        desc==Something terrible happened here long ago...
+        enem==UNDEAD
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You see dead trees surrounding a lone gravestone.
+        desc==It feels cold...
+        enem==UNDEAD
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You see an old hunters cabin.
+        desc==As you near you can tell that something might be wrong...
+        enem==UNDEAD
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==A red tree marks an ancient burial ground...
+        desc==Fog rolls in as you approach...
+        enem==UNDEAD
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You see the tracks of a recent caravan.
+        desc==Hopefully you can find it before something else finds you...
+        enem==GOBLIN
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You see a figure standing near the edge of a forest.
+        desc==You smell a food in the air as you near...
+        enem==GOBLIN
+        trap==false
+        merch==false
+        pe==false
+
+--Rare Scenes (8)--
+
+new:
+	view==There's a tall monolith jutting out of a thick fog.
+        desc==As you near you can see that it is deserted.
+        enem==UNDEAD
+        trap==false
+        merch==false
+        pe==true
+		desc==The monolith begins to glow... You feel a warm sensation.
+		hp==90
+new:
+	view==You see fallen trees and crushed bushes in the forest.
+        desc==What could have caused such damage? There's a vile smell in the air...
+        enem==TROLL
+        trap==false
+        merch==false
+        pe==false
+new:
+	view==You see a circle of flat-topped boulders in a field.
+        desc==Oh no... The large boulders are being used as chairs...
+        enem==TROLL
+        trap==true
+		desc==One of the boulders reveals itself to be a troll! It clubs you as you run.
+		stat==HP
+		mod==-22
+        merch==false
+        pe==false
+new:
+	view==There's an abandon castle!
+        desc==It was once a mighty and bustling place...
+        enem==GHOST
+        trap==false
+        merch==true
+		name==Crazed Jester
+                desc==He is out of his mind, but at least he has some items...
+                invrarity==3
+        pe==false
+new:
+	view==You see a tunnel leading deep into a mountian.
+        desc==It gets dark. The air thins. Maybe you should turn around...
+        enem==GHOST
+        trap==false
+        merch==false
+        pe==true
+		desc==You see a light at the end of the tunnel! You walk out into the sunlight feeling rejuvenated.
+		hp==70
+new:
+	view==You see nothing... But you hear... Laughing?
+        desc==As you near the laughing stops. You feel the ground shake...
+        enem==TROLL
+        trap==false
+        merch==true
+		name==Friendly Troll
+                desc==Most trolls would've stomped on you by now.
+                invrarity==3
+        pe==false
+new:
+	view==You see a glowing alter.
+        desc==There is a magical power about this place.
+        enem==GHOST
+        trap==false
+        merch==false
+        pe==true
+		desc==You hear singing. You have never felt this relaxed before.
+		hp==90
+new:
+	view==You see a lookout tower just beyond a hill.
+        desc==As you approach a thick fog rolls in. You hear whispers. You try to find your way out...
+        enem==GHOST
+        trap==true
+		desc==The fog seems to pull life out of you. You feel a chill...
+		stat==HP
+		mod==-17
+        merch==false
+        pe==false
+
+--Very Rare Scenes (2)--
+
+new:
+	view==You see a plume of smoke rising above the trees.
+	desc==As you near you see a burning village. What a terrible sight.
+	enem==DRAGON
+	trap==true
+		desc==A fiery dragon ambushes you from behind. The ground shakes. You run.
+		stat==HP
+		mod==-31
+	merch==true
+		name==Fleeing Townsman
+                desc==They're going to need some coins to start their new life.
+                invrarity==2
+	pe==true
+		desc==You leave and find a safer place to rest.
+		hp==20
+new:
+	view==You see a massive cave opening in the mountians. Something is glistening inside. 
+        desc==The surrounding forest has been burned. You see the signs of a dragon...
+        enem==DRAGON
+	trap==true
+		desc==A fiery dragon ambushes you from behind. The ground shakes. You run.
+		stat==HP
+		mod==-31
+        merch==true
+		name==Dragon Slayer
+                desc==What a magnificent warrior. They must have vast treasure!
+                invrarity==5
+	pe==true
+		desc==You leave and find a safer place to rest.
+		hp==20

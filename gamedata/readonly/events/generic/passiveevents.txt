@@ -1,0 +1,15 @@
+new:
+	desc==You construct a campfire.
+	hp==60
+new:
+	desc==You rest for a while.
+	hp==40
+new:
+	desc==You construct a campfire and rejuvenate.
+	hp==70
+new:
+	desc==You take a deep breath and relax.
+	hp==50
+new:
+	desc==You rest for as long as you need.
+	hp==80
