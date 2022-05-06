@@ -41,7 +41,7 @@ public enum Direction {
                 result.y--;
                 break;
         }
-        return result;
+        return result; // x and y are arbitrary
     }
 
     @Override
