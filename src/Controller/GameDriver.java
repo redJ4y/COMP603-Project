@@ -9,7 +9,7 @@ Separating the view from the controller at this stage would only add unnecessary
 // @author Jared Scholz
 import Model.Entity.Inventory;
 import Model.Entity.Item;
-import Model.DevTools.DataKeeper;
+import Model.DevTools.OldDataKeeper;
 import Model.Map.Enemy;
 import Model.Map.Event;
 import Model.Map.GameMap;
@@ -20,7 +20,6 @@ import Model.Map.Trap;
 import Model.Entity.Player;
 import Model.Entity.Potion;
 import Model.Entity.StatType;
-import Model.Data.DBManager;
 import java.awt.Point;
 import java.util.Random;
 import java.util.Scanner;
@@ -29,8 +28,7 @@ public class GameDriver {
 
     public final static int MAP_SIZE = 17; // should never be changed when using a saved game
 
-    private final DataKeeper dataKeeper; // OLD
-    private final DBManager dataManager;
+    private final OldDataKeeper dataKeeper;
     private GameMap gameMap;
     private Player player;
 
@@ -40,8 +38,7 @@ public class GameDriver {
     private String ANSI_RESET = ""; // "\u001B[0m" if enabled
 
     public GameDriver() {
-        dataKeeper = new DataKeeper(); // OLD
-        dataManager = new DBManager();
+        dataKeeper = new OldDataKeeper();
         scanner = new Scanner(System.in);
 
         String username = checkForGameSave();

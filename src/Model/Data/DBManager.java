@@ -16,12 +16,16 @@ public class DBManager {
         establishConnection();
     }
 
-    public void establishConnection() {
+    private void establishConnection() {
         try {
             connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
         } catch (SQLException ex) {
             System.out.println("ERROR: COULD NOT CONNECT TO DATABASE");
             System.out.println(ex.getMessage());
         }
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 }

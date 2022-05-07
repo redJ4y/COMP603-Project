@@ -1,13 +1,20 @@
+Sat May 07 17:05:53 NZST 2022 : Apache Derby Network Server - 10.14.2.0 - (1828579) started and ready to accept connections on port 1527
 ----------------------------------------------------------------
-Sat May 07 16:21:04 NZST 2022:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0180-9cbf-ea10-00000ec7e7a8 
-on database directory C:\DevelopmentArea\COMP603\COMP603_Project\GameData_Ebd with class loader sun.misc.Launcher$AppClassLoader@5c647e05 
-Loaded from file:/C:/DevelopmentArea/COMP603/COMP603_Project/lib/derby.jar
+Sat May 07 17:05:56 NZST 2022:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0180-9ce8-efad-ffff83017859 
+on database directory C:\DevelopmentArea\COMP603\COMP603_Project\GameData_Ebd with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@73d16e93 
+Loaded from file:/C:/DevelopmentArea/COMP603/Databases/db-derby-10.14.2.0-bin/lib/derby.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_202-b08
-user.dir=C:\DevelopmentArea\COMP603\COMP603_Project
+java.runtime.version=17.0.2+8-LTS-86
+user.dir=C:\DevelopmentArea\COMP603\Databases\db-derby-10.14.2.0-bin
 os.name=Windows 10
 os.arch=amd64
 os.version=10.0
-derby.system.home=null
+derby.system.home=C:\DevelopmentArea\COMP603\COMP603_Project
 Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Sat May 07 17:07:03 NZST 2022: Shutting down Derby engine
+----------------------------------------------------------------
+Sat May 07 17:07:03 NZST 2022:
+Shutting down instance a816c00e-0180-9ce8-efad-ffff83017859 on database directory C:\DevelopmentArea\COMP603\COMP603_Project\GameData_Ebd with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@73d16e93 
+----------------------------------------------------------------

@@ -38,7 +38,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataKeeper {
+public class OldDataKeeper {
 
     private String username;
     private final List<Item> allItems;
@@ -48,7 +48,7 @@ public class DataKeeper {
     private final List<Trap> allTraps;
     private final List<Scene> allScenes;
 
-    public DataKeeper() {
+    public OldDataKeeper() {
         username = null;
         allItems = new ArrayList<>();
         allEnemies = new ArrayList<>();
@@ -389,7 +389,7 @@ public class DataKeeper {
         return coins;
     }
 
-    private void initializeData() {
+    public void initializeData() {
         loadItems();
         loadEnemies();
         loadMerchants();

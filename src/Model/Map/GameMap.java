@@ -5,7 +5,7 @@ The game map class stores the entire randomly generated game map.
 The game map is composed of Scenes.
  */
 // @author Jared Scholz
-import Model.DevTools.DataKeeper;
+import Model.DevTools.OldDataKeeper;
 import Model.Entity.Item;
 import java.awt.Point;
 import java.io.Serializable;
@@ -19,13 +19,13 @@ public class GameMap implements Serializable {
     private final int size;
     private Scene[][] map;
 
-    public GameMap(int size, DataKeeper data) {
+    public GameMap(int size, OldDataKeeper data) {
         this.size = size;
         initializeMap(data);
     }
 
     /* Randomly generate the map with (new) scenes */
-    private void initializeMap(DataKeeper data) {
+    private void initializeMap(OldDataKeeper data) {
         Random randGen = new Random();
         map = new Scene[size][size];
 
