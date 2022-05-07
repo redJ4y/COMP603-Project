@@ -1,13 +1,13 @@
-package Map;
+package Model.Map;
 
 /*
 The Merchant is a type of Event. Merchants have an inventory (with prices) that the player may purchase from.
  */
 // @author Jared Scholz
-import Entity.Armor;
-import Entity.Item;
-import Entity.Potion;
-import Entity.Weapon;
+import Model.Entity.Armor;
+import Model.Entity.Item;
+import Model.Entity.Potion;
+import Model.Entity.Weapon;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

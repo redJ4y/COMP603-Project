@@ -1,4 +1,4 @@
-package Map;
+package Model.Map;
 
 /*
 A PassiveEvent is a type of Event. PassiveEvents give the player a chance to regain HP.

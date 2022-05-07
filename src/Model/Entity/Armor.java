@@ -1,4 +1,4 @@
-package Entity;
+package Model.Entity;
 
 /*
 Armor is a type of Item. Armor provides the player with bonus protection and agility.

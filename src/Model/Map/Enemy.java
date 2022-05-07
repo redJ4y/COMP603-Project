@@ -1,15 +1,15 @@
-package Map;
+package Model.Map;
 
 /*
 The Enemy is a type of Event. There are multiple types of enemies specified by the EnemyType enum.
 Enemies are entities (as well as Map objects) so they have EntityStats. Enemies are to be battled by the player.
  */
 // @author Jared Scholz
-import Entity.Armor;
-import Entity.Item;
-import Entity.EntityStats;
-import Entity.Potion;
-import Entity.Weapon;
+import Model.Entity.Armor;
+import Model.Entity.Item;
+import Model.Entity.EntityStats;
+import Model.Entity.Potion;
+import Model.Entity.Weapon;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

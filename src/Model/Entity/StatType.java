@@ -1,4 +1,4 @@
-package Entity;
+package Model.Entity;
 
 /*
 The StatType enum specifies a type of stat and stores its string equivalent.

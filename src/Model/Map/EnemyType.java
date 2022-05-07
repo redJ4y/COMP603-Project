@@ -1,4 +1,4 @@
-package Map;
+package Model.Map;
 
 /*
 The EnemyType enum is used to distinguish between Enemies.

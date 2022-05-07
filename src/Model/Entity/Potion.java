@@ -1,4 +1,4 @@
-package Entity;
+package Model.Entity;
 
 /*
 A Potion is a type of Item. Potions may be consumed to modify player stats.

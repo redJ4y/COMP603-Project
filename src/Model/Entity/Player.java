@@ -1,4 +1,4 @@
-package Entity;
+package Model.Entity;
 
 /*
 A Player object stores all of the players data during gameplay.

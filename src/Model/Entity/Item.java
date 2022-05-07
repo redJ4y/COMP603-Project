@@ -1,4 +1,4 @@
-package Entity;
+package Model.Entity;
 
 /*
 Item is the abstract parent class of Weapons, Armor, and Potions.

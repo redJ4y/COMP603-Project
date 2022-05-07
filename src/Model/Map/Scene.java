@@ -1,4 +1,4 @@
-package Map;
+package Model.Map;
 
 /*
 The Scene is the building block of the game map. Each scene has a possible Enemy (battle) and a variety
@@ -6,7 +6,7 @@ of possible Traps/Merchants/PassiveEvents that may be selected at random. These 
 Each scene has a view (what is seen from a distance) and a description (what is seen on approach).
  */
 // @author Jared Scholz
-import Entity.Item;
+import Model.Entity.Item;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

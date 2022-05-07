@@ -7,20 +7,20 @@ When I separate them for part 2, the controller will become much more concise.
 Separating the view from the controller at this stage would only add unnecessary complexity.
  */
 // @author Jared Scholz
-import Entity.Inventory;
-import Entity.Item;
-import FileIO.DataKeeper;
-import Map.Enemy;
-import Map.Event;
-import Map.GameMap;
-import Map.Merchant;
-import Map.PassiveEvent;
-import Map.Scene;
-import Map.Trap;
-import Entity.Player;
-import Entity.Potion;
-import Entity.StatType;
-import FileIO.DBManager;
+import Model.Entity.Inventory;
+import Model.Entity.Item;
+import Model.DevTools.DataKeeper;
+import Model.Map.Enemy;
+import Model.Map.Event;
+import Model.Map.GameMap;
+import Model.Map.Merchant;
+import Model.Map.PassiveEvent;
+import Model.Map.Scene;
+import Model.Map.Trap;
+import Model.Entity.Player;
+import Model.Entity.Potion;
+import Model.Entity.StatType;
+import Model.Data.DBManager;
 import java.awt.Point;
 import java.util.Random;
 import java.util.Scanner;

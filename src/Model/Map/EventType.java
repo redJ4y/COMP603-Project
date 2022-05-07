@@ -1,4 +1,4 @@
-package Map;
+package Model.Map;
 
 /*
 The EventType enum is used to distinguish between Events.

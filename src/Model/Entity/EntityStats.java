@@ -1,4 +1,4 @@
-package Entity;
+package Model.Entity;
 
 /*
 Entities (player and enemies) each use an instance of EntityStats to store their stats.

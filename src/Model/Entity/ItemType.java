@@ -1,4 +1,4 @@
-package Entity;
+package Model.Entity;
 
 /*
 This enum is used to distinguish between different Items

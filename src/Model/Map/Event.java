@@ -1,4 +1,4 @@
-package Map;
+package Model.Map;
 
 /*
 The Event class is the abstract parent of Enemys, Merchants, PassiveEvents, and Traps

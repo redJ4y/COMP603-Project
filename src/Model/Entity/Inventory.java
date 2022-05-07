@@ -1,4 +1,4 @@
-package Entity;
+package Model.Entity;
 
 /*
 The player uses an Inventory to store items and keep track of equipped items.

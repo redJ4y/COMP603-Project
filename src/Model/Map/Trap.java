@@ -1,10 +1,10 @@
-package Map;
+package Model.Map;
 
 /*
 The Trap is a type of Event. Traps may subtract a value from a player stat.
  */
 // @author Jared Scholz
-import Entity.StatType;
+import Model.Entity.StatType;
 import java.io.Serializable;
 
 public class Trap extends Event implements Serializable {

@@ -1,4 +1,4 @@
-package FileIO;
+package Model.DevTools;
 
 /*
 The DataKeeper is responsible for:
@@ -8,22 +8,22 @@ The DataKeeper is responsible for:
     and saving games.
  */
 // @author Jared Scholz
-import Map.Enemy;
-import Map.EnemyType;
-import Map.Merchant;
-import Map.PassiveEvent;
-import Map.Scene;
-import Map.Trap;
-import Entity.Armor;
-import Entity.EntityStats;
-import Entity.Inventory;
-import Entity.Item;
-import Entity.Player;
-import Entity.Potion;
-import Entity.Weapon;
-import Entity.StatType;
-import Entity.TravelMap;
-import Map.GameMap;
+import Model.Map.Enemy;
+import Model.Map.EnemyType;
+import Model.Map.Merchant;
+import Model.Map.PassiveEvent;
+import Model.Map.Scene;
+import Model.Map.Trap;
+import Model.Entity.Armor;
+import Model.Entity.EntityStats;
+import Model.Entity.Inventory;
+import Model.Entity.Item;
+import Model.Entity.Player;
+import Model.Entity.Potion;
+import Model.Entity.Weapon;
+import Model.Entity.StatType;
+import Model.Entity.TravelMap;
+import Model.Map.GameMap;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

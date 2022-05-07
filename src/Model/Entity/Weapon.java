@@ -1,4 +1,4 @@
-package Entity;
+package Model.Entity;
 
 /*
 A Weapon is a type of Item. The weapon is used to deal damage to enemies.

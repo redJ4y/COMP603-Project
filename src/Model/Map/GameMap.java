@@ -1,12 +1,12 @@
-package Map;
+package Model.Map;
 
 /*
 The game map class stores the entire randomly generated game map.
 The game map is composed of Scenes.
  */
 // @author Jared Scholz
-import FileIO.DataKeeper;
-import Entity.Item;
+import Model.DevTools.DataKeeper;
+import Model.Entity.Item;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.List;

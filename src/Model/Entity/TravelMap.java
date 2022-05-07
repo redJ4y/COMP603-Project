@@ -1,4 +1,4 @@
-package Entity;
+package Model.Entity;
 
 /*
 The TravelMap is a data structure used to keep track of player movement history.
