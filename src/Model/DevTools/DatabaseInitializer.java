@@ -48,7 +48,7 @@ public class DatabaseInitializer { // this class transfers data from the old .tx
                     statement.executeUpdate("INSERT INTO POTIONS VALUES ('" + toAdd.getName().replace("'", "''") + "', '" + toAdd.getDescription().replace("'", "''") + "', " + toAdd.getRarity() + ", '" + toAdd.getStat().name() + "', " + toAdd.getModification() + ")");
                 } else if (current instanceof Weapon) {
                     Weapon toAdd = (Weapon) current;
-                    statement.executeUpdate("INSERT INTO WEAPONS VALUES ('" + toAdd.getName().replace("'", "''") + "', '" + toAdd.getDescription().replace("'", "''") + "', " + toAdd.getRarity() + ", '" + toAdd.getDamageMin() + "-" + toAdd.getDamageMax() + "', " + toAdd.getArmorPiercing() + ", " + toAdd.getDurability() + ")");
+                    statement.executeUpdate("INSERT INTO WEAPONS VALUES ('" + toAdd.getName().replace("'", "''") + "', '" + toAdd.getDescription().replace("'", "''") + "', " + toAdd.getRarity() + ", '" + toAdd.getDamageMin() + "," + toAdd.getDamageMax() + "', " + toAdd.getArmorPiercing() + ", " + toAdd.getDurability() + ")");
                 }
             }
 
@@ -65,7 +65,7 @@ public class DatabaseInitializer { // this class transfers data from the old .tx
             }
 
             for (Enemy current : dataKeeper.getAllEnemies()) {
-                statement.executeUpdate("INSERT INTO ENEMIES VALUES ('" + current.getName().replace("'", "''") + "', '" + current.getDescription().replace("'", "''") + "', '" + current.getEnemyType().name() + "', " + current.getRarity() + ", '" + current.getDamageMin() + "-" + current.getDamageMax() + "', "
+                statement.executeUpdate("INSERT INTO ENEMIES VALUES ('" + current.getName().replace("'", "''") + "', '" + current.getDescription().replace("'", "''") + "', '" + current.getEnemyType().name() + "', " + current.getRarity() + ", '" + current.getDamageMin() + "," + current.getDamageMax() + "', "
                         + current.getStats().getHealth() + ", " + current.getStats().getArmorPiercingModifier() + ", " + current.getStats().getProtection() + ", " + current.getStats().getAgility() + ")");
             }
 
