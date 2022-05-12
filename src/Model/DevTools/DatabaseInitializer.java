@@ -38,6 +38,7 @@ public class DatabaseInitializer { // this class transfers data from the old .tx
                     + "TRAP VARCHAR(8), TRAPDESCRIPT VARCHAR(512), TRAPSTAT VARCHAR(16), TRAPMOD INT, "
                     + "MERCH VARCHAR(8), MERCHNAME VARCHAR(512), MERCHDESCRIPT VARCHAR(512), MERCHINVRARITY INT, "
                     + "PE VARCHAR(8), PEDESCRIPT VARCHAR(512), PEHP INT)");
+            statement.executeUpdate("CREATE TABLE SAVES (USERNAME VARCHAR(256), SERGAMEMAP BLOB, SERSTATS BLOB, SERPOSITION BLOB, SERTRAVELMAP BLOB, SERINVENTORY BLOB, COINS INT)");
 
             for (Item current : dataKeeper.getAllItems()) {
                 if (current instanceof Armor) {
