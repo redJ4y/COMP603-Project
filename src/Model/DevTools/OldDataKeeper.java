@@ -1,11 +1,10 @@
 package Model.DevTools;
 
 /*
-The DataKeeper is responsible for:
-    checking for game saves,
-    loading game saves,
-    loading all game data,
-    and saving games.
+THIS CLASS IS USED IN DEVELOPMENT ONLY
+This class allows access to the old .txt game data files.
+This is not used within the game code.
+This was used only to initialize the new database.
  */
 // @author Jared Scholz
 import Model.Map.Enemy;

@@ -1,5 +1,10 @@
 package Model.DevTools;
 
+/*
+THIS CLASS IS USED IN DEVELOPMENT ONLY
+This is not used within the game code.
+This was used only to initialize the new database.
+ */
 // @author Jared Scholz
 import Model.Data.DBManager;
 import Model.Entity.Armor;
