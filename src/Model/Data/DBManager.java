@@ -20,8 +20,6 @@ import Model.Map.Trap;
 import java.awt.Point;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -74,15 +72,31 @@ public class DBManager {
         return connection;
     }
 
-    /* Looks in the saves folder for an existing save. */
+    /* Looks for an existing save. */
     // This method provides the DataKeeper with the username and must be called before other game save methods.
-    /*
     public boolean checkGameSave(String username) {
-
+        this.username = username;
+        boolean alreadyExists = false;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT USERNAME FROM SAVES WHERE USERNAME = '" + username + "'");
+            if (rs.next()) {
+                alreadyExists = true;
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("ERROR CHECKING FOR GAME SAVE");
+            System.out.println(ex.getMessage());
+        }
+        if (!alreadyExists) {
+            initializeData();
+        }
+        return alreadyExists;
     }
-     */
+
     public void saveGame(GameMap gameMap, Player player) {
-        username = "test"; // TEMPORARY
+        // prepare the save record:
         String preparedStatement = "INSERT INTO SAVES VALUES ('" + username + "', ?, ?, ?, ?, ?, 0)";
         try {
             PreparedStatement statement = connection.prepareStatement(preparedStatement);
@@ -96,16 +110,29 @@ public class DBManager {
             System.out.println(ex.getMessage());
         }
 
-        // TODO:
-        // finish all of the save and read functions
-        // finish checkGameSave through getExistingPlayer to emulate the old DataKeeper
+        // complete / fill out the save record:
+        boolean saveWorked = saveGameMap(gameMap);
+        saveWorked = saveWorked ? saveStats(player.getStats()) : false;
+        saveWorked = saveWorked ? savePosition(player.getPosition()) : false;
+        saveWorked = saveWorked ? saveTravelMap(player.getTravelMap()) : false;
+        saveWorked = saveWorked ? saveInventory(player.getInventory()) : false;
+        saveWorked = saveWorked ? saveCoins(player.getCoins()) : false;
+        if (!saveWorked) {
+            deleteGameSave(); // avoid corrupt saves
+        }
     }
 
-    /*
     public void deleteGameSave() {
-
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("DELETE FROM SAVES WHERE USERNAME = '" + username + "'");
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("ERROR DELETING GAME SAVE");
+            System.out.println(ex.getMessage());
+        }
     }
-     */
+
     public GameMap getExistingMap() {
         if (username == null) {
             return null; // checkGameSave not yet called (this should never occur)
@@ -113,11 +140,13 @@ public class DBManager {
         return readExistingGameMap();
     }
 
-    /*
     public Player getExistingPlayer() {
-
+        if (username == null) {
+            return null; // checkGameSave not yet called (this should never occur)
+        }
+        return new Player(username, readExistingStats(), readExistingPosition(), readExistingTravelMap(), readExistingInventory(), readExistingCoins());
     }
-     */
+
     private boolean saveGameMap(GameMap gameMap) {
         String preparedStatement = "UPDATE SAVES SET SERGAMEMAP = ? WHERE USERNAME = '" + username + "'";
         try {
@@ -142,27 +171,116 @@ public class DBManager {
         return true;
     }
 
-    /*
     private boolean saveStats(EntityStats stats) {
+        String preparedStatement = "UPDATE SAVES SET SERSTATS = ? WHERE USERNAME = '" + username + "'";
+        try {
+            ByteArrayOutputStream byteArrStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectStream = new ObjectOutputStream(byteArrStream);
+            objectStream.writeObject(stats);
+            objectStream.flush();
+            byte[] serializedObject = byteArrStream.toByteArray();
+            objectStream.close();
+            byteArrStream.close();
 
+            PreparedStatement statement = connection.prepareStatement(preparedStatement);
+            statement.setObject(1, serializedObject);
+            statement.executeUpdate();
+            statement.close();
+        } catch (IOException | SQLException ex) {
+            System.out.println("ERROR SAVING STATS");
+            System.out.println("Game save lost...");
+            System.out.println(ex.getMessage());
+            return false;
+        }
+        return true;
     }
 
     private boolean savePosition(Point position) {
+        String preparedStatement = "UPDATE SAVES SET SERPOSITION = ? WHERE USERNAME = '" + username + "'";
+        try {
+            ByteArrayOutputStream byteArrStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectStream = new ObjectOutputStream(byteArrStream);
+            objectStream.writeObject(position);
+            objectStream.flush();
+            byte[] serializedObject = byteArrStream.toByteArray();
+            objectStream.close();
+            byteArrStream.close();
 
+            PreparedStatement statement = connection.prepareStatement(preparedStatement);
+            statement.setObject(1, serializedObject);
+            statement.executeUpdate();
+            statement.close();
+        } catch (IOException | SQLException ex) {
+            System.out.println("ERROR SAVING POSITION");
+            System.out.println("Game save lost...");
+            System.out.println(ex.getMessage());
+            return false;
+        }
+        return true;
     }
 
     private boolean saveTravelMap(TravelMap travelMap) {
+        String preparedStatement = "UPDATE SAVES SET SERTRAVELMAP = ? WHERE USERNAME = '" + username + "'";
+        try {
+            ByteArrayOutputStream byteArrStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectStream = new ObjectOutputStream(byteArrStream);
+            objectStream.writeObject(travelMap);
+            objectStream.flush();
+            byte[] serializedObject = byteArrStream.toByteArray();
+            objectStream.close();
+            byteArrStream.close();
 
+            PreparedStatement statement = connection.prepareStatement(preparedStatement);
+            statement.setObject(1, serializedObject);
+            statement.executeUpdate();
+            statement.close();
+        } catch (IOException | SQLException ex) {
+            System.out.println("ERROR SAVING TRAVEL MAP");
+            System.out.println("Game save lost...");
+            System.out.println(ex.getMessage());
+            return false;
+        }
+        return true;
     }
 
     private boolean saveInventory(Inventory inventory) {
+        String preparedStatement = "UPDATE SAVES SET SERINVENTORY = ? WHERE USERNAME = '" + username + "'";
+        try {
+            ByteArrayOutputStream byteArrStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectStream = new ObjectOutputStream(byteArrStream);
+            objectStream.writeObject(inventory);
+            objectStream.flush();
+            byte[] serializedObject = byteArrStream.toByteArray();
+            objectStream.close();
+            byteArrStream.close();
 
+            PreparedStatement statement = connection.prepareStatement(preparedStatement);
+            statement.setObject(1, serializedObject);
+            statement.executeUpdate();
+            statement.close();
+        } catch (IOException | SQLException ex) {
+            System.out.println("ERROR SAVING INVENTORY");
+            System.out.println("Game save lost...");
+            System.out.println(ex.getMessage());
+            return false;
+        }
+        return true;
     }
 
     private boolean saveCoins(int coins) {
-
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("UPDATE SAVES SET COINS = " + coins + " WHERE USERNAME = '" + username + "'");
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("ERROR SAVING COINS");
+            System.out.println("Game save lost...");
+            System.out.println(ex.getMessage());
+            return false;
+        }
+        return true;
     }
-     */
+
     private GameMap readExistingGameMap() {
         GameMap gameMap = null;
         try {
@@ -180,33 +298,123 @@ public class DBManager {
             System.out.println("ERROR LOADING SAVED GAME MAP");
             System.out.println("Corrupt game save!");
             System.out.println(ex.getMessage());
-            // deleteGameSave();
+            deleteGameSave();
             System.exit(0);
         }
         return gameMap;
     }
 
-    /*
     private EntityStats readExistingStats() {
+        EntityStats stats = null;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT SERSTATS FROM SAVES WHERE USERNAME = '" + username + "'");
+            rs.next(); // there will be a single result
+            byte[] serializedObject = rs.getBytes("SERSTATS");
+            rs.close();
+            statement.close();
 
+            ByteArrayInputStream byteArrStream = new ByteArrayInputStream(serializedObject);
+            ObjectInputStream objectStream = new ObjectInputStream(byteArrStream);
+            stats = (EntityStats) objectStream.readObject();
+        } catch (ClassNotFoundException | IOException | SQLException ex) {
+            System.out.println("ERROR LOADING SAVED STATS");
+            System.out.println("Corrupt game save!");
+            System.out.println(ex.getMessage());
+            deleteGameSave();
+            System.exit(0);
+        }
+        return stats;
     }
 
     private Point readExistingPosition() {
+        Point position = null;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT SERPOSITION FROM SAVES WHERE USERNAME = '" + username + "'");
+            rs.next(); // there will be a single result
+            byte[] serializedObject = rs.getBytes("SERPOSITION");
+            rs.close();
+            statement.close();
 
+            ByteArrayInputStream byteArrStream = new ByteArrayInputStream(serializedObject);
+            ObjectInputStream objectStream = new ObjectInputStream(byteArrStream);
+            position = (Point) objectStream.readObject();
+        } catch (ClassNotFoundException | IOException | SQLException ex) {
+            System.out.println("ERROR LOADING SAVED POSITION");
+            System.out.println("Corrupt game save!");
+            System.out.println(ex.getMessage());
+            deleteGameSave();
+            System.exit(0);
+        }
+        return position;
     }
 
     private TravelMap readExistingTravelMap() {
+        TravelMap travelMap = null;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT SERTRAVELMAP FROM SAVES WHERE USERNAME = '" + username + "'");
+            rs.next(); // there will be a single result
+            byte[] serializedObject = rs.getBytes("SERTRAVELMAP");
+            rs.close();
+            statement.close();
 
+            ByteArrayInputStream byteArrStream = new ByteArrayInputStream(serializedObject);
+            ObjectInputStream objectStream = new ObjectInputStream(byteArrStream);
+            travelMap = (TravelMap) objectStream.readObject();
+        } catch (ClassNotFoundException | IOException | SQLException ex) {
+            System.out.println("ERROR LOADING SAVED TRAVEL MAP");
+            System.out.println("Corrupt game save!");
+            System.out.println(ex.getMessage());
+            deleteGameSave();
+            System.exit(0);
+        }
+        return travelMap;
     }
 
     private Inventory readExistingInventory() {
+        Inventory inventory = null;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT SERINVENTORY FROM SAVES WHERE USERNAME = '" + username + "'");
+            rs.next(); // there will be a single result
+            byte[] serializedObject = rs.getBytes("SERINVENTORY");
+            rs.close();
+            statement.close();
 
+            ByteArrayInputStream byteArrStream = new ByteArrayInputStream(serializedObject);
+            ObjectInputStream objectStream = new ObjectInputStream(byteArrStream);
+            inventory = (Inventory) objectStream.readObject();
+        } catch (ClassNotFoundException | IOException | SQLException ex) {
+            System.out.println("ERROR LOADING SAVED INVENTORY");
+            System.out.println("Corrupt game save!");
+            System.out.println(ex.getMessage());
+            deleteGameSave();
+            System.exit(0);
+        }
+        return inventory;
     }
 
     private int readExistingCoins() {
-
+        int coins = 0;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT COINS FROM SAVES WHERE USERNAME = '" + username + "'");
+            rs.next(); // there will be a single result
+            coins = rs.getInt("COINS");
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("ERROR LOADING SAVED COINS");
+            System.out.println("Corrupt game save!");
+            System.out.println(ex.getMessage());
+            deleteGameSave();
+            System.exit(0);
+        }
+        return coins;
     }
-     */
+
     public void initializeData() {
         loadItems();
         loadEnemies();

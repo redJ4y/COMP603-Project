@@ -7,9 +7,9 @@ When I separate them for part 2, the controller will become much more concise.
 Separating the view from the controller at this stage would only add unnecessary complexity.
  */
 // @author Jared Scholz
+import Model.Data.DBManager;
 import Model.Entity.Inventory;
 import Model.Entity.Item;
-import Model.DevTools.OldDataKeeper;
 import Model.Map.Enemy;
 import Model.Map.Event;
 import Model.Map.GameMap;
@@ -28,7 +28,7 @@ public class GameDriver {
 
     public final static int MAP_SIZE = 17; // should never be changed when using a saved game
 
-    private final OldDataKeeper dataKeeper;
+    private final DBManager dataKeeper;
     private GameMap gameMap;
     private Player player;
 
@@ -38,7 +38,7 @@ public class GameDriver {
     private String ANSI_RESET = ""; // "\u001B[0m" if enabled
 
     public GameDriver() {
-        dataKeeper = new OldDataKeeper();
+        dataKeeper = new DBManager();
         scanner = new Scanner(System.in);
 
         String username = checkForGameSave();
