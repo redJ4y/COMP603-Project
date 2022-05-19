@@ -10,10 +10,13 @@ package View;
  */
 public class GameplayView extends javax.swing.JPanel {
 
+    private ViewManager viewManager;
+
     /**
      * Creates new form GameplayView
      */
-    public GameplayView() {
+    public GameplayView(ViewManager viewManager) {
+        this.viewManager = viewManager;
         initComponents();
     }
 

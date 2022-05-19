@@ -20,6 +20,7 @@ import Model.Map.Trap;
 import Model.Entity.Player;
 import Model.Entity.Potion;
 import Model.Entity.StatType;
+import View.ViewManager;
 import java.awt.Point;
 import java.util.Random;
 import java.util.Scanner;
@@ -28,6 +29,7 @@ public class GameDriver {
 
     public final static int MAP_SIZE = 17; // should never be changed when using a saved game
 
+    private final ViewManager viewManager;
     private final DBManager dataKeeper;
     private GameMap gameMap;
     private Player player;
@@ -38,7 +40,9 @@ public class GameDriver {
     private String ANSI_RESET = ""; // "\u001B[0m" if enabled
 
     public GameDriver() {
+        viewManager = new ViewManager(this);
         dataKeeper = new DBManager();
+        viewManager.initDisplay();
         scanner = new Scanner(System.in);
 
         String username = checkForGameSave();
