@@ -6,50 +6,50 @@ import Model.Entity.Item;
 import Model.Entity.Player;
 import Model.Map.Merchant;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.border.EmptyBorder;
 
+/*
+Notes:
+gameArea panels must have a border of 6, 6, 6, 6.
+playerArea panels must have no borders (it is included in the JTabbedPane).
+ */
 public class ViewManager extends JPanel {
 
     private GameDriver gameDriver;
 
+    private JPanel gameArea; // to have CardLayout
+    private JTabbedPane playerArea;
+
     // private PregameMenu pregameMenu;
-    // Game Area panels:
+    // gameArea panels:
     private GameplayView gameplayView;
     // private MerchantView merchantView;
     // private LootView lootView;
-    // Player Area panels:
-    // private MapView mapView;
+    // playerArea panels:
+    private MapView mapView;
     // private InventoryView inventoryView;
     // private StatsView statsView;
 
     public ViewManager(GameDriver gameDriver) {
         super(new BorderLayout());
         this.gameDriver = gameDriver;
-
-        // pregameMenu = new PregameMenu(this);
-        // pregameMenu.setVisible(false);
+        // set up the two sides - gameArea and playerArea:
+        gameArea = new JPanel(new CardLayout());
+        playerArea = new JTabbedPane();
+        playerArea.setBorder(new EmptyBorder(6, 6, 6, 6));
+        super.add(gameArea, BorderLayout.WEST);
+        super.add(playerArea, BorderLayout.EAST);
+        // initialize gameArea:
         gameplayView = new GameplayView(this);
-        // merchantView = new MerchantView(this);
-        // merchantView.setVisible(false);
-        // lootView = new LootView(this);
-        // lootView.setVisible(false);
-        // mapView = new MapView(this);
-        // mapView.setVisible(false);
-        // inventoryView = new InventoryView(this);
-        // inventoryView.setVisible(false);
-        // statsView = new StatsView(this);
-        // statsView.setVisible(false);
-
-        // super.add(pregameMenu, BorderLayout.CENTER);
-        gameplayView.setVisible(true);
-        super.add(gameplayView, BorderLayout.WEST);
-        // super.add(merchantView, BorderLayout.WEST);
-        // super.add(lootView, BorderLayout.WEST);
-        // super.add(mapView, BorderLayout.EAST);
-        // super.add(inventoryView, BorderLayout.EAST);
-        // super.add(statsView, BorderLayout.EAST);
+        gameArea.add(gameplayView, GameAreaOptions.GAMEPLAY.name());
+        // initialize playerArea:
+        mapView = new MapView(this);
+        playerArea.addTab("Map", mapView); // TODO: add tab with icon
     }
 
     public void initDisplay() {
@@ -59,6 +59,10 @@ public class ViewManager extends JPanel {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    private void setGameArea(GameAreaOptions card) {
+        ((CardLayout) gameArea.getLayout()).show(gameArea, card.name());
     }
 
     /* ----- Methods to be called by GameDriver below ----- */
@@ -82,12 +86,10 @@ public class ViewManager extends JPanel {
         setGameArea(GameAreaOptions.LOOT); // to be undone when finished
     }
 
-    /* ----- End methods to be called by GameDriver ----- */
-    private void setGameArea(GameAreaOptions panel) {
-
-    }
-
-    /* ----- Methods to be called by JPanels below ----- */
+    /* ----- End methods to be called by GameDriver ----- 
+    *
+    *
+    *  ----- Methods to be called by view components below ----- */
     public void gameplayButtonPressed(GameplayButtons button) { // used by gameplay panel
 
     }
@@ -115,5 +117,5 @@ public class ViewManager extends JPanel {
     public void setUsername(String username) { // used by pregame menu
 
     }
-    /* ----- End methods to be called by JPanels ----- */
+    /* ----- End methods to be called by view components ----- */
 }
