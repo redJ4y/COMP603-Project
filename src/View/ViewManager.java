@@ -31,7 +31,6 @@ public class ViewManager extends JPanel {
         // pregameMenu = new PregameMenu(this);
         // pregameMenu.setVisible(false);
         gameplayView = new GameplayView(this);
-        gameplayView.setVisible(false);
         // merchantView = new MerchantView(this);
         // merchantView.setVisible(false);
         // lootView = new LootView(this);
@@ -44,6 +43,7 @@ public class ViewManager extends JPanel {
         // statsView.setVisible(false);
 
         // super.add(pregameMenu, BorderLayout.CENTER);
+        gameplayView.setVisible(true);
         super.add(gameplayView, BorderLayout.WEST);
         // super.add(merchantView, BorderLayout.WEST);
         // super.add(lootView, BorderLayout.WEST);
@@ -57,7 +57,6 @@ public class ViewManager extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(this);
         frame.pack();
-        // frame.setSize(768, 488);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

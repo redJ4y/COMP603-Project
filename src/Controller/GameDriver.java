@@ -21,9 +21,11 @@ import Model.Entity.Player;
 import Model.Entity.Potion;
 import Model.Entity.StatType;
 import View.ViewManager;
+import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Point;
 import java.util.Random;
 import java.util.Scanner;
+import javax.swing.UIManager;
 
 public class GameDriver {
 
@@ -700,6 +702,11 @@ public class GameDriver {
     }
 
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch (Exception ex) {
+            System.out.println("ERROR SETTING LOOK AND FEEL");
+        }
         GameDriver driver = new GameDriver();
         driver.runGame();
     }
