@@ -7,7 +7,9 @@ import Model.Entity.Player;
 import Model.Map.Merchant;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Image;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -48,8 +50,10 @@ public class ViewManager extends JPanel {
         gameplayView = new GameplayView(this);
         gameArea.add(gameplayView, GameAreaOptions.GAMEPLAY.name());
         // initialize playerArea:
+        int scaleMode = Image.SCALE_SMOOTH; // set the scale mode for icon scaling
         mapView = new MapView(this);
-        playerArea.addTab("Map", mapView); // TODO: add tab with icon
+        ImageIcon mapIcon = new ImageIcon(new ImageIcon("icons/map.PNG").getImage().getScaledInstance(20, 20, scaleMode));
+        playerArea.addTab("Map", mapIcon, mapView);
     }
 
     public void initDisplay() {
