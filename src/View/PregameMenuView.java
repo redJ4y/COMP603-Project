@@ -2,7 +2,7 @@ package View;
 
 // @author jared
 public class PregameMenuView extends javax.swing.JPanel {
-
+    
     private final ViewManager viewManager;
 
     /**
@@ -103,7 +103,7 @@ public class PregameMenuView extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(invalidText))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(83, 83, 83))
         );
@@ -136,6 +136,7 @@ public class PregameMenuView extends javax.swing.JPanel {
         } else { // username is valid...
             viewManager.usernameSubmitted(username);
         }
+        enterButton.setFocusPainted(false);
     }//GEN-LAST:event_enterButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

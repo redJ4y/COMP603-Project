@@ -36,6 +36,11 @@ public class Potion extends Item implements Serializable {
         return modification;
     }
 
+    public String getSpecsString() {
+        char plusOrMinus = modification < 0 ? '-' : '+';
+        return plusOrMinus + modification + " " + stat.toString();
+    }
+
     @Override
     public String toInventoryString() {
         char plusOrMinus = modification < 0 ? '-' : '+';

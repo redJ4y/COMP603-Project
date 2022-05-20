@@ -7,6 +7,7 @@ import Model.Entity.Player;
 import Model.Map.Merchant;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -15,11 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
-/*
-Notes:
-gameArea panels must have a border of 6, 6, 6, 6.
-playerArea panels must have no borders (it is included in the JTabbedPane).
- */
 public class ViewManager extends JPanel {
 
     private GameDriver gameDriver;
@@ -52,6 +48,8 @@ public class ViewManager extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(this);
         frame.pack();
+        frame.setPreferredSize(new Dimension(800, 488));
+        frame.setMinimumSize(new Dimension(800, 488));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
@@ -60,22 +58,31 @@ public class ViewManager extends JPanel {
         // set up the two sides (gameArea and playerArea):
         gameArea = new JPanel(new CardLayout());
         playerArea = new JTabbedPane();
-        playerArea.setBorder(new EmptyBorder(6, 6, 6, 6));
-        gameArea.setVisible(false);
+        playerArea.setBorder(new EmptyBorder(0, 6, 12, 6));
+        gameArea.setVisible(false); // hidden until pregame menu is complete
         playerArea.setVisible(false);
         super.add(gameArea, BorderLayout.WEST);
         super.add(playerArea, BorderLayout.EAST);
+
         // initialize gameArea:
         gameplayView = new GameplayView(this);
         gameArea.add(gameplayView, GameAreaOptions.GAMEPLAY.name());
+
         // initialize playerArea:
         int scaleMode = Image.SCALE_SMOOTH; // set the scale mode for icon scaling
+        inventoryView = new InventoryView(this);
+        ImageIcon inventoryIcon = new ImageIcon(new ImageIcon("icons/inventory.png").getImage().getScaledInstance(20, 20, scaleMode));
+        playerArea.addTab("Inventory", inventoryIcon, inventoryView);
         mapView = new MapView();
-        ImageIcon mapIcon = new ImageIcon(new ImageIcon("icons/map.PNG").getImage().getScaledInstance(20, 20, scaleMode));
+        ImageIcon mapIcon = new ImageIcon(new ImageIcon("icons/map.png").getImage().getScaledInstance(20, 20, scaleMode));
         playerArea.addTab("Map", mapIcon, mapView);
+        statsView = new StatsView();
+        ImageIcon statsIcon = new ImageIcon(new ImageIcon("icons/stats.png").getImage().getScaledInstance(20, 20, scaleMode));
+        playerArea.addTab("Stats", statsIcon, statsView);
     }
 
     private void hidePregameMenu() {
+        pregameMenu.setVisible(false);
         super.remove(pregameMenu);
         gameArea.setVisible(true);
         playerArea.setVisible(true);

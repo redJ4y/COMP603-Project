@@ -3,7 +3,7 @@ package View;
 // @author jared
 public class MerchantView extends javax.swing.JPanel {
 
-    private ViewManager viewManager;
+    private final ViewManager viewManager;
 
     /**
      * Creates new form MerchantView

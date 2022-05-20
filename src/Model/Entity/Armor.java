@@ -49,6 +49,10 @@ public class Armor extends Item implements Serializable {
         return durability;
     }
 
+    public String getSpecsString() {
+        return "+" + protection + " Protection | +" + agility + " Agility | " + durability + " Durability";
+    }
+
     @Override
     public String toInventoryString() {
         return super.toInventoryString() + "\n +" + protection + " Protection | +" + agility + " Agility | " + durability + " Durability";

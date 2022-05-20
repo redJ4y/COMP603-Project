@@ -3,7 +3,7 @@ package View;
 // @author jared
 public class InventoryView extends javax.swing.JPanel {
 
-    private ViewManager viewManager;
+    private final ViewManager viewManager;
 
     /**
      * Creates new form InventoryView
@@ -22,19 +22,170 @@ public class InventoryView extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        equippedWeaponHolder = new javax.swing.JPanel();
+        equippedArmorHolder = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        topText = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        selectedItemHolder = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        inventoryList = new javax.swing.JList<>();
+        equipButton = new javax.swing.JButton();
+        consumeButton = new javax.swing.JButton();
+        dropButton = new javax.swing.JButton();
+        numItemsLabel = new javax.swing.JLabel();
+
+        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
+        setPreferredSize(new java.awt.Dimension(378, 458));
+
+        equippedWeaponHolder.setMaximumSize(new java.awt.Dimension(366, 58));
+        equippedWeaponHolder.setMinimumSize(new java.awt.Dimension(366, 58));
+        equippedWeaponHolder.setPreferredSize(new java.awt.Dimension(366, 58));
+
+        javax.swing.GroupLayout equippedWeaponHolderLayout = new javax.swing.GroupLayout(equippedWeaponHolder);
+        equippedWeaponHolder.setLayout(equippedWeaponHolderLayout);
+        equippedWeaponHolderLayout.setHorizontalGroup(
+            equippedWeaponHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        equippedWeaponHolderLayout.setVerticalGroup(
+            equippedWeaponHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 58, Short.MAX_VALUE)
+        );
+
+        equippedArmorHolder.setMaximumSize(new java.awt.Dimension(366, 58));
+        equippedArmorHolder.setMinimumSize(new java.awt.Dimension(366, 58));
+
+        javax.swing.GroupLayout equippedArmorHolderLayout = new javax.swing.GroupLayout(equippedArmorHolder);
+        equippedArmorHolder.setLayout(equippedArmorHolderLayout);
+        equippedArmorHolderLayout.setHorizontalGroup(
+            equippedArmorHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        equippedArmorHolderLayout.setVerticalGroup(
+            equippedArmorHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 58, Short.MAX_VALUE)
+        );
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        jLabel1.setText("Equipped Armor");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        jLabel2.setText("Equipped Weapon");
+
+        topText.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        topText.setText("Jared | 183 [Health] | 226 Coins");
+
+        selectedItemHolder.setMaximumSize(new java.awt.Dimension(366, 58));
+        selectedItemHolder.setMinimumSize(new java.awt.Dimension(366, 58));
+
+        javax.swing.GroupLayout selectedItemHolderLayout = new javax.swing.GroupLayout(selectedItemHolder);
+        selectedItemHolder.setLayout(selectedItemHolderLayout);
+        selectedItemHolderLayout.setHorizontalGroup(
+            selectedItemHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        selectedItemHolderLayout.setVerticalGroup(
+            selectedItemHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 58, Short.MAX_VALUE)
+        );
+
+        inventoryList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(inventoryList);
+
+        equipButton.setText("Equip");
+        equipButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                equipButtonActionPerformed(evt);
+            }
+        });
+
+        consumeButton.setText("Consume");
+
+        dropButton.setText("Drop");
+
+        numItemsLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        numItemsLabel.setText("0/10");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 378, Short.MAX_VALUE)
+            .addComponent(equippedWeaponHolder, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+            .addComponent(equippedArmorHolder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(equipButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dropButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(numItemsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(consumeButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jSeparator1)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(topText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE))
+                .addContainerGap())
+            .addComponent(selectedItemHolder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 458, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(topText)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(equippedWeaponHolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(equippedArmorHolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(numItemsLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(equipButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(consumeButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dropButton))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(selectedItemHolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void equipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_equipButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_equipButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton consumeButton;
+    private javax.swing.JButton dropButton;
+    private javax.swing.JButton equipButton;
+    private javax.swing.JPanel equippedArmorHolder;
+    private javax.swing.JPanel equippedWeaponHolder;
+    private javax.swing.JList<String> inventoryList;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel numItemsLabel;
+    private javax.swing.JPanel selectedItemHolder;
+    private javax.swing.JLabel topText;
     // End of variables declaration//GEN-END:variables
 }

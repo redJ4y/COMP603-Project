@@ -77,6 +77,10 @@ public class Weapon extends Item implements Serializable {
         return durability;
     }
 
+    public String getSpecsString() {
+        return damageMin + "-" + damageMax + " Damage | " + armorPiercing + " AP | " + durability + " Durability";
+    }
+
     @Override
     public String toInventoryString() {
         return super.toInventoryString() + "\n " + damageMin + "-" + damageMax + " Damage | " + armorPiercing + " AP | " + durability + " Durability";
