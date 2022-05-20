@@ -71,13 +71,13 @@ public class ViewManager extends JPanel {
         // initialize playerArea:
         int scaleMode = Image.SCALE_SMOOTH; // set the scale mode for icon scaling
         inventoryView = new InventoryView(this);
-        ImageIcon inventoryIcon = new ImageIcon(new ImageIcon("icons/inventory.png").getImage().getScaledInstance(20, 20, scaleMode));
+        ImageIcon inventoryIcon = new ImageIcon(new ImageIcon("icons/pinventory.png").getImage().getScaledInstance(20, 20, scaleMode));
         playerArea.addTab("Inventory", inventoryIcon, inventoryView);
         mapView = new MapView();
-        ImageIcon mapIcon = new ImageIcon(new ImageIcon("icons/map.png").getImage().getScaledInstance(20, 20, scaleMode));
+        ImageIcon mapIcon = new ImageIcon(new ImageIcon("icons/pmap.png").getImage().getScaledInstance(20, 20, scaleMode));
         playerArea.addTab("Map", mapIcon, mapView);
         statsView = new StatsView();
-        ImageIcon statsIcon = new ImageIcon(new ImageIcon("icons/stats.png").getImage().getScaledInstance(20, 20, scaleMode));
+        ImageIcon statsIcon = new ImageIcon(new ImageIcon("icons/pstats.png").getImage().getScaledInstance(20, 20, scaleMode));
         playerArea.addTab("Stats", statsIcon, statsView);
 
         // hide areas until the pregame menu is complete:
