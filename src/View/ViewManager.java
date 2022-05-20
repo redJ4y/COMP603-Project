@@ -36,11 +36,10 @@ public class ViewManager extends JPanel {
     public ViewManager(GameDriver gameDriver) {
         super(new BorderLayout());
         this.gameDriver = gameDriver;
+        initializePanels();
 
         pregameMenu = new PregameMenuView(this);
         super.add(pregameMenu, BorderLayout.CENTER);
-
-        initializePanels();
     }
 
     public void display() {
@@ -48,25 +47,26 @@ public class ViewManager extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(this);
         frame.pack();
-        frame.setPreferredSize(new Dimension(800, 488));
         frame.setMinimumSize(new Dimension(800, 488));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
     private void initializePanels() {
-        // set up the two sides (gameArea and playerArea):
+        // set up the two sides/areas (gameArea and playerArea):
         gameArea = new JPanel(new CardLayout());
         playerArea = new JTabbedPane();
         playerArea.setBorder(new EmptyBorder(0, 6, 12, 6));
-        gameArea.setVisible(false); // hidden until pregame menu is complete
-        playerArea.setVisible(false);
         super.add(gameArea, BorderLayout.WEST);
         super.add(playerArea, BorderLayout.EAST);
 
         // initialize gameArea:
         gameplayView = new GameplayView(this);
         gameArea.add(gameplayView, GameAreaOptions.GAMEPLAY.name());
+        merchantView = new MerchantView(this);
+        gameArea.add(merchantView, GameAreaOptions.MERCHANT.name());
+        lootView = new LootView(this);
+        gameArea.add(lootView, GameAreaOptions.LOOT.name());
 
         // initialize playerArea:
         int scaleMode = Image.SCALE_SMOOTH; // set the scale mode for icon scaling
@@ -79,6 +79,10 @@ public class ViewManager extends JPanel {
         statsView = new StatsView();
         ImageIcon statsIcon = new ImageIcon(new ImageIcon("icons/stats.png").getImage().getScaledInstance(20, 20, scaleMode));
         playerArea.addTab("Stats", statsIcon, statsView);
+
+        // hide areas until the pregame menu is complete:
+        gameArea.setVisible(false);
+        playerArea.setVisible(false);
     }
 
     private void hidePregameMenu() {
