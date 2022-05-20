@@ -1,15 +1,12 @@
 package View;
 
 // @author jared
-public class GameplayView extends javax.swing.JPanel {
-
-    private ViewManager viewManager;
+public class StatsView extends javax.swing.JPanel {
 
     /**
-     * Creates new form GameplayView
+     * Creates new form StatsView
      */
-    public GameplayView(ViewManager viewManager) {
-        this.viewManager = viewManager;
+    public StatsView() {
         initComponents();
     }
 
@@ -30,7 +27,7 @@ public class GameplayView extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 488, Short.MAX_VALUE)
+            .addGap(0, 458, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

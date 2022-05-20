@@ -1,22 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package View;
 
-/**
- *
- * @author jared
- */
+// @author jared
 public class MapView extends javax.swing.JPanel {
-
-    private ViewManager viewManager;
 
     /**
      * Creates new form MapView
      */
-    public MapView(ViewManager viewManager) {
-        this.viewManager = viewManager;
+    public MapView() {
         initComponents();
     }
 
@@ -29,41 +19,19 @@ public class MapView extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-
-        setPreferredSize(new java.awt.Dimension(378, 490));
-
-        jButton1.setLabel("test");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(159, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(147, 147, 147))
+            .addGap(0, 378, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(208, 208, 208)
-                .addComponent(jButton1)
-                .addContainerGap(260, Short.MAX_VALUE))
+            .addGap(0, 458, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables
 }

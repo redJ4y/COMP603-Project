@@ -1,14 +1,14 @@
 package View;
 
 // @author jared
-public class GameplayView extends javax.swing.JPanel {
+public class MerchantView extends javax.swing.JPanel {
 
     private ViewManager viewManager;
 
     /**
-     * Creates new form GameplayView
+     * Creates new form MerchantView
      */
-    public GameplayView(ViewManager viewManager) {
+    public MerchantView(ViewManager viewManager) {
         this.viewManager = viewManager;
         initComponents();
     }

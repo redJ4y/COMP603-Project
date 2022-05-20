@@ -44,7 +44,7 @@ public class GameDriver {
     public GameDriver() {
         viewManager = new ViewManager(this);
         dataKeeper = new DBManager();
-        viewManager.initDisplay();
+        viewManager.display();
         scanner = new Scanner(System.in);
 
         String username = checkForGameSave();

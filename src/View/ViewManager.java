@@ -24,26 +24,45 @@ public class ViewManager extends JPanel {
 
     private GameDriver gameDriver;
 
-    private JPanel gameArea; // to have CardLayout
+    private JPanel gameArea; // to use CardLayout
     private JTabbedPane playerArea;
 
-    // private PregameMenu pregameMenu;
+    private PregameMenuView pregameMenu;
     // gameArea panels:
     private GameplayView gameplayView;
-    // private MerchantView merchantView;
-    // private LootView lootView;
+    private MerchantView merchantView;
+    private LootView lootView;
     // playerArea panels:
     private MapView mapView;
-    // private InventoryView inventoryView;
-    // private StatsView statsView;
+    private InventoryView inventoryView;
+    private StatsView statsView;
 
     public ViewManager(GameDriver gameDriver) {
         super(new BorderLayout());
         this.gameDriver = gameDriver;
-        // set up the two sides - gameArea and playerArea:
+
+        pregameMenu = new PregameMenuView(this);
+        super.add(pregameMenu, BorderLayout.CENTER);
+
+        initializePanels();
+    }
+
+    public void display() {
+        JFrame frame = new JFrame("RPG Game");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(this);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
+    private void initializePanels() {
+        // set up the two sides (gameArea and playerArea):
         gameArea = new JPanel(new CardLayout());
         playerArea = new JTabbedPane();
         playerArea.setBorder(new EmptyBorder(6, 6, 6, 6));
+        gameArea.setVisible(false);
+        playerArea.setVisible(false);
         super.add(gameArea, BorderLayout.WEST);
         super.add(playerArea, BorderLayout.EAST);
         // initialize gameArea:
@@ -51,18 +70,15 @@ public class ViewManager extends JPanel {
         gameArea.add(gameplayView, GameAreaOptions.GAMEPLAY.name());
         // initialize playerArea:
         int scaleMode = Image.SCALE_SMOOTH; // set the scale mode for icon scaling
-        mapView = new MapView(this);
+        mapView = new MapView();
         ImageIcon mapIcon = new ImageIcon(new ImageIcon("icons/map.PNG").getImage().getScaledInstance(20, 20, scaleMode));
         playerArea.addTab("Map", mapIcon, mapView);
     }
 
-    public void initDisplay() {
-        JFrame frame = new JFrame("RPG Game");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(this);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+    private void hidePregameMenu() {
+        super.remove(pregameMenu);
+        gameArea.setVisible(true);
+        playerArea.setVisible(true);
     }
 
     private void setGameArea(GameAreaOptions card) {
@@ -118,8 +134,10 @@ public class ViewManager extends JPanel {
 
     }
 
-    public void setUsername(String username) { // used by pregame menu
-
+    public void usernameSubmitted(String username) { // used by pregame menu
+        // username is already validated
+        hidePregameMenu(); // switch to the game view
+        // TODO: give the username to the driver
     }
     /* ----- End methods to be called by view components ----- */
 }
