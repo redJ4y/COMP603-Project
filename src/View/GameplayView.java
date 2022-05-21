@@ -40,6 +40,7 @@ public class GameplayView extends javax.swing.JPanel {
 
         textArea.setEditable(false);
         textArea.setColumns(20);
+        textArea.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
         textArea.setRows(5);
         scrollPane.setViewportView(textArea);
 

@@ -46,8 +46,8 @@ public class ViewManager extends JPanel {
         JFrame frame = new JFrame("RPG Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(this);
-        frame.pack();
         frame.setMinimumSize(new Dimension(800, 488));
+        frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
