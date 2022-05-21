@@ -1,9 +1,28 @@
 package View;
 
 // @author jared
+import Model.Entity.Armor;
+import Model.Entity.Inventory;
+import Model.Entity.Item;
+import Model.Entity.Player;
+import Model.Entity.Potion;
+import Model.Entity.Weapon;
+import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultListModel;
+
 public class InventoryView extends javax.swing.JPanel {
 
     private final ViewManager viewManager;
+
+    private final ItemDisplay equippedWeapon;
+    private final ItemDisplay equippedArmor;
+    private final ItemDisplay selectedItem;
+    private final DefaultListModel inventoryModel; // model behind inventoryList
+    private List<Item> inventoryItems; // store for display purposes
+    private int eqWeaponIndex, eqArmorIndex; // store equipped item indexes
+    private boolean confirmDrop; // true when trying to drop an equipped item
 
     /**
      * Creates new form InventoryView
@@ -11,6 +30,67 @@ public class InventoryView extends javax.swing.JPanel {
     public InventoryView(ViewManager viewManager) {
         this.viewManager = viewManager;
         initComponents();
+        disableButtons();
+        confirmDrop = false;
+        // initialize item displays:
+        equippedWeapon = new ItemDisplay(null);
+        equippedArmor = new ItemDisplay(null);
+        selectedItem = new ItemDisplay(null);
+        equippedWeaponHolder.setLayout(new BorderLayout());
+        equippedArmorHolder.setLayout(new BorderLayout());
+        selectedItemHolder.setLayout(new BorderLayout());
+        equippedWeaponHolder.add(equippedWeapon, BorderLayout.CENTER);
+        equippedArmorHolder.add(equippedArmor, BorderLayout.CENTER);
+        selectedItemHolder.add(selectedItem, BorderLayout.CENTER);
+        equippedWeapon.setAsEmptySlot();
+        equippedArmor.setAsEmptySlot();
+        selectedItem.setAsInvisible();
+        // initialize the inventory list stuff:
+        inventoryModel = new DefaultListModel();
+        inventoryList.setModel(inventoryModel);
+        inventoryItems = new ArrayList<>(1); // default value to avoid errors
+    }
+
+    public void updateInventory(Player player) {
+        Inventory inventory = player.getInventory();
+        inventoryItems = inventory.getItems();
+        eqWeaponIndex = inventory.getEquippedWeaponIndex();
+        eqArmorIndex = inventory.getEquippedArmorIndex();
+
+        topText.setText(player.getName() + " | " + player.getStats().getHealth() + " [Health] | " + player.getCoins() + " Coins");
+        numItemsLabel.setText(inventoryItems.size() + "/" + inventory.MAX_SIZE);
+        if (inventory.getEquippedWeaponIndex() < 0) { // faster way of checking for null
+            equippedWeapon.setAsEmptySlot();
+        } else {
+            equippedWeapon.setItem(inventory.getEquippedWeapon());
+        }
+        if (inventory.getEquippedArmorIndex() < 0) { // faster way of checking for null
+            equippedArmor.setAsEmptySlot();
+        } else {
+            equippedArmor.setItem(inventory.getEquippedArmor());
+        }
+        // update/prep inventoryList:
+        updateInventoryList();
+        disableButtons();
+        if (!selectedItem.isDisplayingMessage()) { // only clear if it was displaying an item
+            selectedItem.setAsInvisible();
+        }
+        confirmDrop = false;
+    }
+
+    private void updateInventoryList() {
+        inventoryModel.clear();
+        int index = 0;
+        for (Item current : inventoryItems) {
+            // MUST maintain indexing of the inventory
+            inventoryModel.add(index++, current.getName());
+        }
+    }
+
+    private void disableButtons() {
+        consumeButton.setEnabled(false);
+        dropButton.setEnabled(false);
+        equipButton.setEnabled(false);
     }
 
     /**
@@ -84,19 +164,19 @@ public class InventoryView extends javax.swing.JPanel {
         selectedItemHolder.setLayout(selectedItemHolderLayout);
         selectedItemHolderLayout.setHorizontalGroup(
             selectedItemHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 376, Short.MAX_VALUE)
         );
         selectedItemHolderLayout.setVerticalGroup(
             selectedItemHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 58, Short.MAX_VALUE)
         );
 
-        inventoryList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         inventoryList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        inventoryList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                inventoryListValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(inventoryList);
 
         equipButton.setText("Equip");
@@ -107,8 +187,18 @@ public class InventoryView extends javax.swing.JPanel {
         });
 
         consumeButton.setText("Consume");
+        consumeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                consumeButtonActionPerformed(evt);
+            }
+        });
 
         dropButton.setText("Drop");
+        dropButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dropButtonActionPerformed(evt);
+            }
+        });
 
         numItemsLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         numItemsLabel.setText("0/10");
@@ -170,8 +260,75 @@ public class InventoryView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void equipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_equipButtonActionPerformed
-        // TODO add your handling code here:
+        int selectedIndex = inventoryList.getSelectedIndex();
+        disableButtons(); // quickly disable buttons
+        if (selectedIndex >= 0 && selectedIndex < inventoryItems.size()) { // validate
+            Item selection = inventoryItems.get(selectedIndex);
+            if (selection instanceof Weapon || selection instanceof Armor) { // further validate
+                selectedItem.becomeLabel(selection.getName() + " equipped.");
+                viewManager.equipOrConsumePressed(selectedIndex);
+            }
+        }
     }//GEN-LAST:event_equipButtonActionPerformed
+
+    private void inventoryListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_inventoryListValueChanged
+        if (!evt.getValueIsAdjusting()) {
+            confirmDrop = false;
+            int selectedIndex = inventoryList.getSelectedIndex();
+            if (selectedIndex < 0) {
+                // no selection...
+                disableButtons();
+                if (!selectedItem.isDisplayingMessage()) { // only clear if it was displaying an item
+                    selectedItem.setAsInvisible();
+                }
+            } else if (selectedIndex < inventoryItems.size()) { // validate
+                Item selection = inventoryItems.get(selectedIndex);
+                selectedItem.setItem(selection);
+                // enable correct buttons:
+                dropButton.setEnabled(true);
+                if (selection instanceof Weapon || selection instanceof Armor) {
+                    consumeButton.setEnabled(false); // disable incorrect button
+                    if (selectedIndex != eqWeaponIndex && selectedIndex != eqArmorIndex) {
+                        // only enable equip button if item is un-equiped
+                        equipButton.setEnabled(true);
+                    } else {
+                        equipButton.setEnabled(false); // disable incorrect button
+                    }
+                } else if (selection instanceof Potion) {
+                    equipButton.setEnabled(false); // disable incorrect button
+                    consumeButton.setEnabled(true);
+                }
+            }
+        }
+    }//GEN-LAST:event_inventoryListValueChanged
+
+    private void consumeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consumeButtonActionPerformed
+        int selectedIndex = inventoryList.getSelectedIndex();
+        disableButtons(); // quickly disable buttons
+        if (selectedIndex >= 0 && selectedIndex < inventoryItems.size()) { // validate
+            Item selection = inventoryItems.get(selectedIndex);
+            if (selection instanceof Potion) { // further validate
+                selectedItem.becomeLabel(selection.getName() + " consumed.", ((Potion) selection).getSpecsString());
+                viewManager.equipOrConsumePressed(selectedIndex);
+            }
+        }
+    }//GEN-LAST:event_consumeButtonActionPerformed
+
+    private void dropButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dropButtonActionPerformed
+        int selectedIndex = inventoryList.getSelectedIndex();
+        disableButtons(); // quickly disable buttons
+        if (selectedIndex >= 0 && selectedIndex < inventoryItems.size()) { // validate
+            if (!confirmDrop && (selectedIndex == eqWeaponIndex || selectedIndex == eqWeaponIndex)) {
+                confirmDrop = true; // require confirmation
+                selectedItem.becomeLabel("Item equipped! Press drop again to confirm.");
+                dropButton.setEnabled(true); // re-enable drop button
+            } else {
+                confirmDrop = false;
+                selectedItem.becomeLabel(inventoryItems.get(selectedIndex).getName() + " dropped.");
+                viewManager.dropPressed(selectedIndex);
+            }
+        }
+    }//GEN-LAST:event_dropButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

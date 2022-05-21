@@ -29,7 +29,6 @@ public abstract class Item implements Serializable {
     protected void setBroken() {
         GameDriver.notifyOfBrokenItem(name);
         name = "Broken " + name;
-        description = "This item has broken, consider replacing it...\n   " + description;
     }
 
     public ItemType getType() {

@@ -17,22 +17,22 @@ public class ItemDisplay extends javax.swing.JPanel {
     private static ImageIcon armorIcon = null;
     private static ImageIcon potionIcon = null;
 
-    private Item item;
+    private boolean isCustom; // is this panel holding a custom message
 
     /**
      * Creates new form ItemDisplay
      */
     public ItemDisplay(Item item) {
-        this.item = item;
         initComponents();
         initScaledInstances(); // initialize scaled instances of icons at first use
+        iconHolder.setLayout(new BorderLayout()); // initialize iconHolder
         setItem(item);
     }
 
     public void setItem(Item item) { // can be called again after instantiated
         if (item instanceof Weapon) {
             JLabel iconWrapper = new JLabel(weaponIcon, JLabel.CENTER);
-            iconHolder.setLayout(new BorderLayout());
+            iconHolder.removeAll();
             iconHolder.add(iconWrapper, BorderLayout.CENTER);
             iconHolder.setToolTipText("Weapon");
             nameLabel.setText(item.getName());
@@ -40,7 +40,7 @@ public class ItemDisplay extends javax.swing.JPanel {
             descLabel.setText(item.getDescription());
         } else if (item instanceof Armor) {
             JLabel iconWrapper = new JLabel(armorIcon, JLabel.CENTER);
-            iconHolder.setLayout(new BorderLayout());
+            iconHolder.removeAll();
             iconHolder.add(iconWrapper, BorderLayout.CENTER);
             iconHolder.setToolTipText("Armor");
             nameLabel.setText(item.getName());
@@ -48,17 +48,65 @@ public class ItemDisplay extends javax.swing.JPanel {
             descLabel.setText(item.getDescription());
         } else if (item instanceof Potion) {
             JLabel iconWrapper = new JLabel(potionIcon, JLabel.CENTER);
-            iconHolder.setLayout(new BorderLayout());
+            iconHolder.removeAll();
             iconHolder.add(iconWrapper, BorderLayout.CENTER);
             iconHolder.setToolTipText("Potion");
             nameLabel.setText(item.getName());
             specsLabel.setText(((Potion) item).getSpecsString());
             descLabel.setText(item.getDescription());
         } else { // e.g. null
-            nameLabel.setText("No Item Selected");
+            iconHolder.removeAll();
+            iconHolder.repaint();
+            iconHolder.setToolTipText(null);
+            nameLabel.setText("No Item");
             specsLabel.setText("-");
             descLabel.setText("-");
         }
+        isCustom = false;
+    }
+
+    public void setAsEmptySlot() {
+        iconHolder.removeAll();
+        iconHolder.repaint();
+        iconHolder.setToolTipText(null);
+        nameLabel.setText("Empty Slot");
+        specsLabel.setText("-");
+        descLabel.setText("-");
+        isCustom = true;
+    }
+
+    public void setAsInvisible() {
+        iconHolder.removeAll();
+        iconHolder.repaint();
+        iconHolder.setToolTipText(null);
+        nameLabel.setText(" ");
+        specsLabel.setText(" ");
+        descLabel.setText(" ");
+        isCustom = true;
+    }
+
+    public void becomeLabel(String text) {
+        iconHolder.removeAll();
+        iconHolder.repaint();
+        iconHolder.setToolTipText(null);
+        nameLabel.setText(text);
+        specsLabel.setText(" ");
+        descLabel.setText(" ");
+        isCustom = true;
+    }
+
+    public void becomeLabel(String firstText, String secondText) {
+        iconHolder.removeAll();
+        iconHolder.repaint();
+        iconHolder.setToolTipText(null);
+        nameLabel.setText(firstText);
+        specsLabel.setText(secondText);
+        descLabel.setText(" ");
+        isCustom = true;
+    }
+
+    public boolean isDisplayingMessage() {
+        return isCustom;
     }
 
     private void initScaledInstances() { // initialize scaled instances of icons only once
@@ -87,6 +135,10 @@ public class ItemDisplay extends javax.swing.JPanel {
         specsLabel = new javax.swing.JLabel();
         descLabel = new javax.swing.JLabel();
 
+        setBackground(new java.awt.Color(51, 51, 51));
+        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(42, 42, 42)));
+
+        iconHolder.setBackground(new java.awt.Color(51, 51, 51));
         iconHolder.setMaximumSize(new java.awt.Dimension(46, 46));
         iconHolder.setMinimumSize(new java.awt.Dimension(46, 46));
         iconHolder.setPreferredSize(new java.awt.Dimension(46, 46));
@@ -121,7 +173,7 @@ public class ItemDisplay extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(specsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
+                    .addComponent(specsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                     .addComponent(descLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );

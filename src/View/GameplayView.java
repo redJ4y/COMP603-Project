@@ -39,9 +39,11 @@ public class GameplayView extends javax.swing.JPanel {
         quitButton = new javax.swing.JButton();
 
         textArea.setEditable(false);
+        textArea.setBackground(new java.awt.Color(51, 51, 51));
         textArea.setColumns(20);
         textArea.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
         textArea.setRows(5);
+        textArea.setFocusable(false);
         scrollPane.setViewportView(textArea);
 
         northButton.setText("N");

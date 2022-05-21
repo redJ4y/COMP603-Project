@@ -97,6 +97,10 @@ public class GameDriver {
     }
 
     public void runGame() {
+
+        // TEMPORARY:
+        viewManager.updatePlayerInfo(player);
+
         System.out.println("-=- Game Description -=-");
         System.out.println("Explore a randomly generated map.");
         System.out.println("You may return to places you've already been.");

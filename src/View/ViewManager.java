@@ -99,6 +99,7 @@ public class ViewManager extends JPanel {
     /* ----- Methods to be called by GameDriver below ----- */
     public void updatePlayerInfo(Player player) {
         // updates inventory, travel map, stats
+        inventoryView.updateInventory(player);
     }
 
     public void displayText(String text) {

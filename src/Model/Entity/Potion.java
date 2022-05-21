@@ -37,19 +37,19 @@ public class Potion extends Item implements Serializable {
     }
 
     public String getSpecsString() {
-        char plusOrMinus = modification < 0 ? '-' : '+';
+        String plusOrMinus = modification < 0 ? "-" : "+";
         return plusOrMinus + modification + " " + stat.toString();
     }
 
     @Override
     public String toInventoryString() {
-        char plusOrMinus = modification < 0 ? '-' : '+';
+        String plusOrMinus = modification < 0 ? "-" : "+";
         return super.toInventoryString() + "\n " + plusOrMinus + modification + " " + stat.toString();
     }
 
     @Override
     public String toInventoryString(int coins) {
-        char plusOrMinus = modification < 0 ? '-' : '+';
+        String plusOrMinus = modification < 0 ? "-" : "+";
         return super.toInventoryString(coins) + "\n " + plusOrMinus + modification + " " + stat.toString();
     }
 
