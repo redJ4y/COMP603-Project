@@ -1,9 +1,14 @@
 package View;
 
 // @author jared
+import Model.Entity.Item;
+import java.awt.BorderLayout;
+
 public class LootView extends javax.swing.JPanel {
 
     private final ViewManager viewManager;
+
+    private final ItemDisplay item;
 
     /**
      * Creates new form LootView
@@ -11,6 +16,27 @@ public class LootView extends javax.swing.JPanel {
     public LootView(ViewManager viewManager) {
         this.viewManager = viewManager;
         initComponents();
+        item = new ItemDisplay(null);
+        itemHolder.setLayout(new BorderLayout());
+        itemHolder.add(item, BorderLayout.CENTER);
+        item.setAsEmptySlot();
+    }
+
+    public void prepPanel(Item loot, int numCoins, boolean invFull) {
+        numCoinsText.setText("You search the corpse and find " + numCoins + " coins!");
+        item.setItem(loot);
+        if (invFull) {
+            collectButton.setEnabled(false);
+            invFullLabel.setVisible(true);
+        } else {
+            collectButton.setEnabled(true);
+            invFullLabel.setVisible(false);
+        }
+    }
+
+    public void invNotFull() { // the player has dropped something
+        collectButton.setEnabled(true);
+        invFullLabel.setVisible(false);
     }
 
     /**
@@ -65,6 +91,7 @@ public class LootView extends javax.swing.JPanel {
         jLabel2.setText("Loot");
 
         collectButton.setText("Collect");
+        collectButton.setFocusable(false);
         collectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 collectButtonActionPerformed(evt);
@@ -72,6 +99,12 @@ public class LootView extends javax.swing.JPanel {
         });
 
         leaveButton.setText("Leave");
+        leaveButton.setFocusable(false);
+        leaveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                leaveButtonActionPerformed(evt);
+            }
+        });
 
         invFullLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         invFullLabel.setForeground(new java.awt.Color(255, 153, 153));
@@ -99,8 +132,7 @@ public class LootView extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(collectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(leaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, 0)))
+                                .addComponent(leaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -129,8 +161,13 @@ public class LootView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void collectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_collectButtonActionPerformed
-        // TODO add your handling code here:
+        collectButton.setEnabled(false);
+        viewManager.collectLoot();
     }//GEN-LAST:event_collectButtonActionPerformed
+
+    private void leaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaveButtonActionPerformed
+        viewManager.leavePressed(GameAreaOptions.LOOT);
+    }//GEN-LAST:event_leaveButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

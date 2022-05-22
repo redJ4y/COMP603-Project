@@ -47,6 +47,10 @@
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JScrollPane" name="scrollPane">
+      <Properties>
+        <Property name="verticalScrollBarPolicy" type="int" value="22"/>
+        <Property name="focusable" type="boolean" value="false"/>
+      </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
@@ -58,7 +62,7 @@
             </Property>
             <Property name="columns" type="int" value="20"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Palatino Linotype" size="12" style="0"/>
+              <Font name="Palatino Linotype" size="10" style="0"/>
             </Property>
             <Property name="rows" type="int" value="5"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -115,11 +119,16 @@
         <Component class="javax.swing.JButton" name="northButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="N"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="northButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="eastButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="E"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="eastButtonActionPerformed"/>
@@ -128,6 +137,7 @@
         <Component class="javax.swing.JButton" name="southButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="S"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="southButtonActionPerformed"/>
@@ -137,15 +147,17 @@
           <Properties>
             <Property name="text" type="java.lang.String" value=" "/>
             <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fakeButtonActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="westButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="W"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="westButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -203,16 +215,25 @@
         <Component class="javax.swing.JButton" name="adventureButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Adventure"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="adventureButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="attackButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Attack"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="attackButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="runButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Run"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="runButtonActionPerformed"/>
@@ -221,17 +242,29 @@
         <Component class="javax.swing.JButton" name="yesButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Yes"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="yesButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="noButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="No"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="noButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="quitButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Save/Quit"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="quitButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

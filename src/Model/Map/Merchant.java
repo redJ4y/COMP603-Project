@@ -96,6 +96,14 @@ public class Merchant extends Event implements Serializable {
         return invrarity;
     }
 
+    public List<Item> getItems() {
+        return inventory;
+    }
+
+    public List<Integer> getPrices() {
+        return prices;
+    }
+
     @Override
     public String toString() {
         return super.toString() + ", " + invrarity + "]";

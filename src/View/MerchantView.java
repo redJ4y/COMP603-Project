@@ -1,9 +1,27 @@
 package View;
 
 // @author jared
+import Model.Entity.Item;
+import Model.Map.Merchant;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultListModel;
+
 public class MerchantView extends javax.swing.JPanel {
 
     private final ViewManager viewManager;
+
+    private final Color highlightColor = new Color(255, 153, 153); // to highlight text
+    private final Color defaultColor = new Color(187, 187, 187); // to reset text
+
+    private final ItemDisplay selectedItem;
+    private final DefaultListModel inventoryModel; // model behind inventoryList
+    private List<Item> inventoryItems; // store for display purposes
+    private List<Integer> inventoryPrices; // store for validation purposes
+    private int playerCoins; // store for validation purposes
+    private boolean playerInvFull;
 
     /**
      * Creates new form MerchantView
@@ -11,6 +29,59 @@ public class MerchantView extends javax.swing.JPanel {
     public MerchantView(ViewManager viewManager) {
         this.viewManager = viewManager;
         initComponents();
+        playerInvFull = true; // default value
+        selectedItem = new ItemDisplay(null);
+        selectedItemHolder.setLayout(new BorderLayout());
+        selectedItemHolder.add(selectedItem, BorderLayout.CENTER);
+        selectedItem.setAsInvisible();
+        inventoryModel = new DefaultListModel();
+        inventoryList.setModel(inventoryModel);
+        inventoryItems = new ArrayList<>(1); // default value to avoid errors
+        inventoryPrices = new ArrayList<>(1); // default value to avoid errors
+    }
+
+    public void prepPanel(Merchant merchant, int coins, boolean invFull) {
+        inventoryItems = merchant.getItems();
+        inventoryPrices = merchant.getPrices();
+        playerCoins = coins;
+        playerInvFull = invFull;
+
+        nameText.setText("Phew... It's a: " + merchant.getName());
+        descText.setText(merchant.getDescription());
+        numCoinsText.setText("You check your pockets and find that you have " + coins + " coins.");
+        offeringText.setText("The " + merchant.getName() + " offers you a selection of items:");
+        if (playerInvFull) {
+            invFullLabel.setVisible(true);
+        } else {
+            invFullLabel.setVisible(false);
+        }
+        updateInventoryList();
+        numCoinsText.setForeground(defaultColor);
+        purchaseButton.setEnabled(false);
+        selectedItem.setAsInvisible();
+    }
+
+    public void invNotFull() { // the player has dropped something
+        int selectedIndex = inventoryList.getSelectedIndex();
+        if (selectedIndex >= 0) {
+            if (inventoryPrices.get(selectedIndex) > playerCoins) {
+                numCoinsText.setForeground(highlightColor);
+                purchaseButton.setEnabled(false);
+            } else {
+                numCoinsText.setForeground(defaultColor);
+                purchaseButton.setEnabled(true);
+            }
+        } // enable button IF something is selected
+        invFullLabel.setVisible(false);
+    }
+
+    private void updateInventoryList() {
+        inventoryModel.clear();
+        int index = 0;
+        for (Item current : inventoryItems) {
+            // MUST maintain indexing of the inventory
+            inventoryModel.add(index++, current.getName() + " ~ " + inventoryPrices.get(index) + " Coins");
+        }
     }
 
     /**
@@ -52,6 +123,11 @@ public class MerchantView extends javax.swing.JPanel {
         offeringText.setText("The Village Dweller offers you a selection of items:");
 
         inventoryList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        inventoryList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                inventoryListValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(inventoryList);
 
         selectedItemHolder.setMaximumSize(new java.awt.Dimension(366, 58));
@@ -70,6 +146,7 @@ public class MerchantView extends javax.swing.JPanel {
         );
 
         purchaseButton.setText("Purchase");
+        purchaseButton.setFocusable(false);
         purchaseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 purchaseButtonActionPerformed(evt);
@@ -77,6 +154,12 @@ public class MerchantView extends javax.swing.JPanel {
         });
 
         leaveButton.setText("Leave");
+        leaveButton.setFocusable(false);
+        leaveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                leaveButtonActionPerformed(evt);
+            }
+        });
 
         invFullLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         invFullLabel.setForeground(new java.awt.Color(255, 153, 153));
@@ -139,8 +222,40 @@ public class MerchantView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void purchaseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseButtonActionPerformed
-        // TODO add your handling code here:
+        int selectedIndex = inventoryList.getSelectedIndex();
+        purchaseButton.setEnabled(false);
+        if (selectedIndex >= 0 && selectedIndex < inventoryItems.size()) { // validate
+            if (inventoryPrices.get(selectedIndex) <= playerCoins) { // further validate
+                viewManager.purchaseItem(selectedIndex);
+            }
+        }
     }//GEN-LAST:event_purchaseButtonActionPerformed
+
+    private void leaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaveButtonActionPerformed
+        viewManager.leavePressed(GameAreaOptions.MERCHANT);
+    }//GEN-LAST:event_leaveButtonActionPerformed
+
+    private void inventoryListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_inventoryListValueChanged
+        if (!evt.getValueIsAdjusting()) {
+            int selectedIndex = inventoryList.getSelectedIndex();
+            if (selectedIndex < 0) {
+                // no selection...
+                purchaseButton.setEnabled(false);
+                selectedItem.setAsInvisible();
+            } else if (selectedIndex < inventoryItems.size()) { // validate
+                selectedItem.setItem(inventoryItems.get(selectedIndex));
+                if (!playerInvFull) {
+                    if (inventoryPrices.get(selectedIndex) > playerCoins) {
+                        numCoinsText.setForeground(highlightColor);
+                        purchaseButton.setEnabled(false);
+                    } else {
+                        numCoinsText.setForeground(defaultColor);
+                        purchaseButton.setEnabled(true);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_inventoryListValueChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

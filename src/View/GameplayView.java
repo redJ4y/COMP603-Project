@@ -1,6 +1,8 @@
 package View;
 
 // @author jared
+import java.util.List;
+
 public class GameplayView extends javax.swing.JPanel {
 
     private final ViewManager viewManager;
@@ -11,6 +13,59 @@ public class GameplayView extends javax.swing.JPanel {
     public GameplayView(ViewManager viewManager) {
         this.viewManager = viewManager;
         initComponents();
+        disableButtons();
+    }
+
+    public void addText(String text) {
+        textArea.append(text);
+        textArea.setCaretPosition(textArea.getDocument().getLength()); // auto scroll
+    }
+
+    public void enableButtons(List<GameplayButtons> buttons) {
+        disableButtons(); // for good measure, should already be disabled
+        for (GameplayButtons current : buttons) {
+            switch (current) {
+                case N:
+                    northButton.setEnabled(true);
+                    break;
+                case E:
+                    eastButton.setEnabled(true);
+                    break;
+                case S:
+                    southButton.setEnabled(true);
+                    break;
+                case W:
+                    westButton.setEnabled(true);
+                    break;
+                case YES:
+                    yesButton.setEnabled(true);
+                    break;
+                case NO:
+                    noButton.setEnabled(true);
+                    break;
+                case ADVENTURE:
+                    adventureButton.setEnabled(true);
+                    break;
+                case ATTACK:
+                    attackButton.setEnabled(true);
+                    break;
+                case RUN:
+                    runButton.setEnabled(true);
+                    break;
+            }
+        }
+    }
+
+    private void disableButtons() {
+        northButton.setEnabled(false);
+        eastButton.setEnabled(false);
+        southButton.setEnabled(false);
+        westButton.setEnabled(false);
+        adventureButton.setEnabled(false);
+        attackButton.setEnabled(false);
+        runButton.setEnabled(false);
+        yesButton.setEnabled(false);
+        noButton.setEnabled(false);
     }
 
     /**
@@ -38,17 +93,27 @@ public class GameplayView extends javax.swing.JPanel {
         noButton = new javax.swing.JButton();
         quitButton = new javax.swing.JButton();
 
+        scrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setFocusable(false);
+
         textArea.setEditable(false);
         textArea.setBackground(new java.awt.Color(51, 51, 51));
         textArea.setColumns(20);
-        textArea.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
+        textArea.setFont(new java.awt.Font("Palatino Linotype", 0, 10)); // NOI18N
         textArea.setRows(5);
         textArea.setFocusable(false);
         scrollPane.setViewportView(textArea);
 
         northButton.setText("N");
+        northButton.setFocusable(false);
+        northButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                northButtonActionPerformed(evt);
+            }
+        });
 
         eastButton.setText("E");
+        eastButton.setFocusable(false);
         eastButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eastButtonActionPerformed(evt);
@@ -56,6 +121,7 @@ public class GameplayView extends javax.swing.JPanel {
         });
 
         southButton.setText("S");
+        southButton.setFocusable(false);
         southButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 southButtonActionPerformed(evt);
@@ -64,13 +130,15 @@ public class GameplayView extends javax.swing.JPanel {
 
         fakeButton.setText(" ");
         fakeButton.setEnabled(false);
-        fakeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fakeButtonActionPerformed(evt);
-            }
-        });
+        fakeButton.setFocusable(false);
 
         westButton.setText("W");
+        westButton.setFocusable(false);
+        westButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                westButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout directionPanelLayout = new javax.swing.GroupLayout(directionPanel);
         directionPanel.setLayout(directionPanelLayout);
@@ -108,10 +176,23 @@ public class GameplayView extends javax.swing.JPanel {
         );
 
         adventureButton.setText("Adventure");
+        adventureButton.setFocusable(false);
+        adventureButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adventureButtonActionPerformed(evt);
+            }
+        });
 
         attackButton.setText("Attack");
+        attackButton.setFocusable(false);
+        attackButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                attackButtonActionPerformed(evt);
+            }
+        });
 
         runButton.setText("Run");
+        runButton.setFocusable(false);
         runButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 runButtonActionPerformed(evt);
@@ -119,10 +200,28 @@ public class GameplayView extends javax.swing.JPanel {
         });
 
         yesButton.setText("Yes");
+        yesButton.setFocusable(false);
+        yesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yesButtonActionPerformed(evt);
+            }
+        });
 
         noButton.setText("No");
+        noButton.setFocusable(false);
+        noButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                noButtonActionPerformed(evt);
+            }
+        });
 
         quitButton.setText("Save/Quit");
+        quitButton.setFocusable(false);
+        quitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quitButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
         controlPanel.setLayout(controlPanelLayout);
@@ -191,20 +290,54 @@ public class GameplayView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void eastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eastButtonActionPerformed
-        // TODO add your handling code here:
+        disableButtons();
+        viewManager.gameplayButtonPressed(GameplayButtons.E);
     }//GEN-LAST:event_eastButtonActionPerformed
 
     private void southButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_southButtonActionPerformed
-        // TODO add your handling code here:
+        disableButtons();
+        viewManager.gameplayButtonPressed(GameplayButtons.S);
     }//GEN-LAST:event_southButtonActionPerformed
 
-    private void fakeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fakeButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fakeButtonActionPerformed
-
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
-        // TODO add your handling code here:
+        disableButtons();
+        viewManager.gameplayButtonPressed(GameplayButtons.RUN);
     }//GEN-LAST:event_runButtonActionPerformed
+
+    private void adventureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adventureButtonActionPerformed
+        disableButtons();
+        viewManager.gameplayButtonPressed(GameplayButtons.ADVENTURE);
+    }//GEN-LAST:event_adventureButtonActionPerformed
+
+    private void attackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attackButtonActionPerformed
+        disableButtons();
+        viewManager.gameplayButtonPressed(GameplayButtons.ATTACK);
+    }//GEN-LAST:event_attackButtonActionPerformed
+
+    private void yesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yesButtonActionPerformed
+        disableButtons();
+        viewManager.gameplayButtonPressed(GameplayButtons.YES);
+    }//GEN-LAST:event_yesButtonActionPerformed
+
+    private void noButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noButtonActionPerformed
+        disableButtons();
+        viewManager.gameplayButtonPressed(GameplayButtons.NO);
+    }//GEN-LAST:event_noButtonActionPerformed
+
+    private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
+        disableButtons();
+        viewManager.gameplayButtonPressed(GameplayButtons.QUIT);
+    }//GEN-LAST:event_quitButtonActionPerformed
+
+    private void northButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_northButtonActionPerformed
+        disableButtons();
+        viewManager.gameplayButtonPressed(GameplayButtons.N);
+    }//GEN-LAST:event_northButtonActionPerformed
+
+    private void westButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_westButtonActionPerformed
+        disableButtons();
+        viewManager.gameplayButtonPressed(GameplayButtons.W);
+    }//GEN-LAST:event_westButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

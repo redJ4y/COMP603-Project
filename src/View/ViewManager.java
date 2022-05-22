@@ -18,12 +18,12 @@ import javax.swing.border.EmptyBorder;
 
 public class ViewManager extends JPanel {
 
-    private GameDriver gameDriver;
+    private final GameDriver gameDriver;
 
     private JPanel gameArea; // to use CardLayout
     private JTabbedPane playerArea;
 
-    private PregameMenuView pregameMenu;
+    private final PregameMenuView pregameMenu;
     // gameArea panels:
     private GameplayView gameplayView;
     private MerchantView merchantView;
@@ -98,23 +98,30 @@ public class ViewManager extends JPanel {
 
     /* ----- Methods to be called by GameDriver below ----- */
     public void updatePlayerInfo(Player player) {
-        // updates inventory, travel map, stats
+        // updates inventory, map, and stats panels
         inventoryView.updateInventory(player);
     }
 
-    public void displayText(String text) {
-        // display text in the gameplayView
+    public void displayTextLine(String text) {
+        gameplayView.addText(text + "\n");
+    }
+
+    public void displayTextLine() {
+        gameplayView.addText("\n");
     }
 
     public void enableGameplayButtons(List<GameplayButtons> buttons) {
-        // enables buttons (disables all buttons not in the array)
+        // only the selected buttons will be enabled
+        gameplayView.enableButtons(buttons);
     }
 
-    public void setMerchant(Merchant merchant, int coins) {
+    public void setMerchant(Merchant merchant, int coins, boolean invFull) {
+        merchantView.prepPanel(merchant, coins, invFull);
         setGameArea(GameAreaOptions.MERCHANT); // to be undone when finished
     }
 
-    public void setLoot(Item loot, String enemyName) {
+    public void setLoot(Item loot, int numCoins, boolean invFull) {
+        lootView.prepPanel(loot, numCoins, invFull);
         setGameArea(GameAreaOptions.LOOT); // to be undone when finished
     }
 
@@ -123,10 +130,10 @@ public class ViewManager extends JPanel {
     *
     *  ----- Methods to be called by view components below ----- */
     public void gameplayButtonPressed(GameplayButtons button) { // used by gameplay panel
-
+        System.out.println("Button pressed: " + button.name());
     }
 
-    public void purchaseItem(Item selection) { // used by merchant panel
+    public void purchaseItem(int index) { // used by merchant panel
 
     }
 
@@ -139,11 +146,12 @@ public class ViewManager extends JPanel {
     }
 
     public void equipOrConsumePressed(int index) { // used by inventory panel
-
+        // index is already validated
     }
 
     public void dropPressed(int index) { // used by inventory panel
-
+        // index is already validated
+        lootView.invNotFull(); // make sure the user can pick up a waiting item
     }
 
     public void usernameSubmitted(String username) { // used by pregame menu

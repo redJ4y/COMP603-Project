@@ -48,7 +48,6 @@
                               <Component id="leaveButton" min="-2" pref="85" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -152,6 +151,7 @@
     <Component class="javax.swing.JButton" name="collectButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Collect"/>
+        <Property name="focusable" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="collectButtonActionPerformed"/>
@@ -160,7 +160,11 @@
     <Component class="javax.swing.JButton" name="leaveButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Leave"/>
+        <Property name="focusable" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="leaveButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="invFullLabel">
       <Properties>
