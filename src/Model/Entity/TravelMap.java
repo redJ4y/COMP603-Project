@@ -34,6 +34,10 @@ public class TravelMap implements Serializable {
         history[position.x][position.y] = 'X';
     }
 
+    public char[][] getArray() {
+        return history;
+    }
+
     public String toDisplayString(Point currentPosition) {
         String toReturn = getHorizontalBorder();
         for (int i = 0; i < size; i++) {

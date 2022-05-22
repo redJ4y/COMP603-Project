@@ -98,8 +98,9 @@ public class ViewManager extends JPanel {
 
     /* ----- Methods to be called by GameDriver below ----- */
     public void updatePlayerInfo(Player player) {
-        // updates inventory, map, and stats panels
         inventoryView.updateInventory(player);
+        statsView.updateStats(player);
+        mapView.updateMap(player.getTravelMap(), player.getPosition());
     }
 
     public void displayTextLine(String text) {
@@ -134,7 +135,7 @@ public class ViewManager extends JPanel {
     }
 
     public void purchaseItem(int index) { // used by merchant panel
-
+        // index is already validated
     }
 
     public void collectLoot() { // used by loot panel
@@ -142,7 +143,7 @@ public class ViewManager extends JPanel {
     }
 
     public void leavePressed(GameAreaOptions source) { // used by merchant and loot panels
-
+        setGameArea(GameAreaOptions.GAMEPLAY);
     }
 
     public void equipOrConsumePressed(int index) { // used by inventory panel

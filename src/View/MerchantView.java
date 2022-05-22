@@ -11,10 +11,10 @@ import javax.swing.DefaultListModel;
 
 public class MerchantView extends javax.swing.JPanel {
 
-    private final ViewManager viewManager;
+    private final Color HIGHLIGHT_COLOR = new Color(255, 153, 153); // to highlight text
+    private final Color DEFAULT_COLOR = new Color(187, 187, 187); // to reset text
 
-    private final Color highlightColor = new Color(255, 153, 153); // to highlight text
-    private final Color defaultColor = new Color(187, 187, 187); // to reset text
+    private final ViewManager viewManager;
 
     private final ItemDisplay selectedItem;
     private final DefaultListModel inventoryModel; // model behind inventoryList
@@ -29,7 +29,8 @@ public class MerchantView extends javax.swing.JPanel {
     public MerchantView(ViewManager viewManager) {
         this.viewManager = viewManager;
         initComponents();
-        playerInvFull = true; // default value
+        playerCoins = -1; // to be overwritten
+        playerInvFull = true; // to be overwritten
         selectedItem = new ItemDisplay(null);
         selectedItemHolder.setLayout(new BorderLayout());
         selectedItemHolder.add(selectedItem, BorderLayout.CENTER);
@@ -56,22 +57,22 @@ public class MerchantView extends javax.swing.JPanel {
             invFullLabel.setVisible(false);
         }
         updateInventoryList();
-        numCoinsText.setForeground(defaultColor);
+        numCoinsText.setForeground(DEFAULT_COLOR);
         purchaseButton.setEnabled(false);
         selectedItem.setAsInvisible();
     }
 
     public void invNotFull() { // the player has dropped something
         int selectedIndex = inventoryList.getSelectedIndex();
-        if (selectedIndex >= 0) {
+        if (selectedIndex >= 0) { // enable button IF something is selected
             if (inventoryPrices.get(selectedIndex) > playerCoins) {
-                numCoinsText.setForeground(highlightColor);
+                numCoinsText.setForeground(HIGHLIGHT_COLOR);
                 purchaseButton.setEnabled(false);
             } else {
-                numCoinsText.setForeground(defaultColor);
+                numCoinsText.setForeground(DEFAULT_COLOR);
                 purchaseButton.setEnabled(true);
             }
-        } // enable button IF something is selected
+        }
         invFullLabel.setVisible(false);
     }
 
@@ -80,7 +81,8 @@ public class MerchantView extends javax.swing.JPanel {
         int index = 0;
         for (Item current : inventoryItems) {
             // MUST maintain indexing of the inventory
-            inventoryModel.add(index++, current.getName() + " ~ " + inventoryPrices.get(index) + " Coins");
+            inventoryModel.add(index, current.getName() + " ~ " + inventoryPrices.get(index) + " Coins");
+            index++;
         }
     }
 
@@ -240,16 +242,17 @@ public class MerchantView extends javax.swing.JPanel {
             int selectedIndex = inventoryList.getSelectedIndex();
             if (selectedIndex < 0) {
                 // no selection...
+                numCoinsText.setForeground(DEFAULT_COLOR);
                 purchaseButton.setEnabled(false);
                 selectedItem.setAsInvisible();
             } else if (selectedIndex < inventoryItems.size()) { // validate
                 selectedItem.setItem(inventoryItems.get(selectedIndex));
-                if (!playerInvFull) {
+                if (!playerInvFull) { // only (maybe) enable button if inventory has room
                     if (inventoryPrices.get(selectedIndex) > playerCoins) {
-                        numCoinsText.setForeground(highlightColor);
+                        numCoinsText.setForeground(HIGHLIGHT_COLOR);
                         purchaseButton.setEnabled(false);
                     } else {
-                        numCoinsText.setForeground(defaultColor);
+                        numCoinsText.setForeground(DEFAULT_COLOR);
                         purchaseButton.setEnabled(true);
                     }
                 }
