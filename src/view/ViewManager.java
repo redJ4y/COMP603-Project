@@ -1,6 +1,7 @@
 package view;
 
 // @author Jared Scholz
+import controller.Direction;
 import controller.GameDriver;
 import model.entity.Item;
 import model.entity.Player;
@@ -9,6 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -120,6 +122,12 @@ public class ViewManager extends JPanel {
         gameplayView.enableButtons(buttons);
     } // only the selected buttons will be enabled
 
+    public void enableGameplayButton(GameplayButtons button) { // for a single button
+        List<GameplayButtons> wrapperList = new ArrayList<>(1);
+        wrapperList.add(button);
+        gameplayView.enableButtons(wrapperList);
+    } // only the selected button will be enabled
+
     public void setMerchant(Merchant merchant, int coins, boolean invFull) {
         merchantView.prepPanel(merchant, coins, invFull);
         setGameArea(GameAreaOptions.MERCHANT); // to be undone when finished
@@ -135,7 +143,33 @@ public class ViewManager extends JPanel {
     *
     *  ----- Methods to be called by view components below ----- */
     public void gameplayButtonPressed(GameplayButtons button) { // used by gameplay panel
-
+        // convert button press into action method call:
+        switch (button) {
+            case N: // fall through
+            case S: // fall through
+            case E: // fall through
+            case W:
+                gameDriver.look(Direction.charToDirection(button.name().toLowerCase().charAt(0)));
+                break;
+            case YES:
+                gameDriver.goDirection();
+                break;
+            case NO:
+                gameDriver.pickNewDirection();
+                break;
+            case ADVENTURE:
+                gameDriver.adventure();
+                break;
+            case ATTACK:
+                gameDriver.attack();
+                break;
+            case RUN:
+                gameDriver.runAway();
+                break;
+            case QUIT:
+                gameDriver.quitGame();
+                break;
+        }
     }
 
     public void purchaseItem(int index) { // used by merchant panel
@@ -163,8 +197,10 @@ public class ViewManager extends JPanel {
 
     public void usernameSubmitted(String username) { // used by pregame menu
         // username is already validated
-
-        hidePregameMenu(); // switch to playing the game
+        gameDriver.checkForGameSave(username);
+        hidePregameMenu(); // switch to playing the game (info has been updated)
     }
     /* ----- End methods to be called by view components ----- */
 }
+
+// TODO: allow printing text with a delay (from the last message). only enable buttons when all text in the queue is printed

@@ -23,356 +23,101 @@ import model.entity.StatType;
 import view.ViewManager;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import javax.swing.UIManager;
+import view.GameplayButtons;
 
 public class GameDriver {
 
-    public final static int MAP_SIZE = 17; // should never be changed when using a saved game
+    public final static int MAP_SIZE = 17; // should not be changed
 
-    private final ViewManager viewManager;
     private final DBManager dataKeeper;
+    private final ViewManager viewManager;
     private GameMap gameMap;
     private Player player;
 
-    private final Scanner scanner;
-    private String ANSI_GREEN = ""; // "\u001B[32m" if enabled
-    private String ANSI_RED = ""; // "\u001B[31m" if enabled
-    private String ANSI_RESET = ""; // "\u001B[0m" if enabled
+    /* Context variables - remember values between actions */
+    private Point lookToPosition;
 
     public GameDriver() {
-        viewManager = new ViewManager(this);
         dataKeeper = new DBManager();
-        viewManager.display();
-        scanner = new Scanner(System.in);
-
-        String username = checkForGameSave();
-        // if no game save was found, the input name is returned to make a new game with
-        // if null is returned, gameMap and player have already been initialized
-        if (username != null) {
-            // initialize new game:
-            gameMap = new GameMap(MAP_SIZE, dataKeeper); // generate random map
-            player = new Player(username, MAP_SIZE / 2, MAP_SIZE / 2); // generate new player (center of map)
-        }
-
-        enableTextColors(); // give the option to enable text colors
-    }
-
-    /* Looks for a game save - if there isn't, return input name */
-    private String checkForGameSave() {
-        System.out.println("-=- Pre-Game Menu -=-");
-        System.out.println("Enter a username (one word):");
-        String username = "*invalid*";
-        while (!username.matches("^[A-za-z0-9]{1,255}$")) { // don't allow special characters, limit 255
-            System.out.print("> ");
-            username = scanner.nextLine();
-            username = username.contains(" ") ? username.split(" ")[0] : username; // extract first word
-
-            if (!username.matches("^[A-za-z0-9]{1,255}$")) {
-                System.out.println("Username must not contain special characters. Try again:");
-            }
-        } // this ensures that the username is a valid option (valid in file name)
-
-        if (dataKeeper.checkGameSave(username)) {
-            // a game save with this username exists
-            System.out.println("User found, loading saved game...\n");
-            gameMap = dataKeeper.getExistingMap();
-            player = dataKeeper.getExistingPlayer();
-            return null;
-        }
-        System.out.println("Generating new game...\n");
-        return username; // if no game save was found, the input name is returned to make a new game with
-    }
-
-    /* Allow the user to change prompt text color */
-    private void enableTextColors() {
-        System.out.println("Would you like prompt text to appear green? (Y/N):");
-        if (scanYesNo()) {
-            ANSI_GREEN = "\u001B[32m";
-            ANSI_RED = "\u001B[31m";
-            ANSI_RESET = "\u001B[0m";
-        }
-        System.out.println();
+        viewManager = new ViewManager(this);
+        gameMap = null; // set by checkForGameSave()
+        player = null; // set by checkForGameSave()
     }
 
     public void runGame() {
+        viewManager.display(); // prompts the pregame menu first
+        // prepare gameplay view:
+        viewManager.displayTextLine("You awake in a strange place.");
+        viewManager.displayTextLine("You feel ready for an adventure...");
+        viewManager.enableGameplayButton(GameplayButtons.ADVENTURE);
+    }
 
-        // TEMPORARY:
+    /* Looks for a game save and initializes game data variables */
+    public void checkForGameSave(String username) {
+        if (dataKeeper.checkGameSave(username)) {
+            // a game save with this username exists...
+            gameMap = dataKeeper.getExistingMap();
+            player = dataKeeper.getExistingPlayer();
+        } else {
+            // a game save with this username does not exist...
+            gameMap = new GameMap(MAP_SIZE, dataKeeper); // generate random map
+            player = new Player(username, MAP_SIZE / 2, MAP_SIZE / 2); // generate new player
+        }
         viewManager.updatePlayerInfo(player);
-
-        System.out.println("-=- Game Description -=-");
-        System.out.println("Explore a randomly generated map.");
-        System.out.println("You may return to places you've already been.");
-        System.out.println("Fight enemies and buy from merchants.");
-        System.out.println("Upgrade your gear and bolster your stats.");
-        System.out.println("You may equip a single weapon + armor piece.");
-        System.out.println("Remember to use your potions!");
-        System.out.println();
-        System.out.println("-=- Stats Overview -=-");
-        System.out.println("HP [Health] - When it reaches 0 you die.");
-        System.out.println("DM [Damage Modifier] - Increases damage dealt.");
-        System.out.println("APM [Armor Piercing Modifier] - Mitigates enemy armor.");
-        System.out.println("PROT [Protection] - Decreases damage taken.");
-        System.out.println("AGIL [Agility] - Increases chance of dodging attacks.");
-        System.out.println();
-        System.out.println("-=-");
-        System.out.println("REMEMBER: You may enter Q at any time to save and quit.");
-        System.out.println("-=-");
-        System.out.println();
-        while (true) { // exits when quitGame() called or player dies
-            showMenu();
-        }
     }
 
-    /* Show the main menu that leads to other actions */
-    private void showMenu() {
-        System.out.println(ANSI_GREEN + "Your options:" + ANSI_RESET);
-        System.out.println(ANSI_GREEN + " (I)" + ANSI_RESET + " Access Inventory");
-        System.out.println(ANSI_GREEN + " (M)" + ANSI_RESET + " Inspect Map");
-        System.out.println(ANSI_GREEN + " (A)" + ANSI_RESET + " Adventure");
-        char input = 0;
-        while (input != 'i' && input != 'm' && input != 'a') {
-            System.out.print(ANSI_GREEN + "> " + ANSI_RESET);
-            input = scanner.nextLine().toLowerCase().charAt(0);
-            if (input == 'q') {
-                quitGame();
-            }
-            if (input != 'i' && input != 'm' && input != 'a') {
-                System.out.println(ANSI_RED + "Invalid input, try again:" + ANSI_RESET);
-            }
-        }
-        switch (input) {
-            case 'i':
-                showInventory(false);
-                break;
-            case 'm':
-                showMap();
-                break;
-            case 'a':
-                lookAndMovePlayer(); // player moves and encounters a scene (or not)
-                break;
-        }
+    public void adventure() {
+        viewManager.displayTextLine("Pick a direction to look...");
+        viewManager.enableGameplayButtons(Arrays.asList(GameplayButtons.N, GameplayButtons.E, GameplayButtons.S, GameplayButtons.W));
     }
 
-    /* Allow the player to equip/consume items, drop items, or view stats */
-    private void showInventory(boolean inBattle) { // inBattle true: shows an extra message before quitting
-        String playerInfo = player.getName() + " | " + player.getStats().getHealth() + " [Health] | " + player.getCoins() + " Coins";
-        String underline = ">";
-        for (int i = 0; i < Math.max(playerInfo.length() - 2, 33); i++) {
-            underline += "-";
-        }
-        underline += "<";
-        System.out.println(playerInfo);
-        System.out.println(underline);
-
-        Inventory inventory = player.getInventory();
-        Item equippedWeapon = inventory.getEquippedWeapon();
-        Item equippedArmor = inventory.getEquippedArmor();
-        if (equippedWeapon != null) {
-            System.out.print("Equipped Weapon: ");
-            System.out.println(equippedWeapon.toInventoryString().substring(4)); // omit type tag
-        } else {
-            System.out.println("No weapon equipped!");
-        }
-        System.out.println();
-        if (equippedArmor != null) {
-            System.out.print("Equipped Armor: ");
-            System.out.println(equippedArmor.toInventoryString().substring(4)); // omit type tag
-        } else {
-            System.out.println("No armor equipped!");
-        }
-        System.out.println(underline);
-        if (inventory.isEmpty()) {
-            System.out.println("Inventory is empty!");
-        } else {
-            System.out.println("Inventory (" + inventory.getItems().size() + "/" + inventory.MAX_SIZE + "):");
-        }
-        int index = 1;
-        for (Item current : inventory.getItems()) {
-            System.out.println("\n" + (index++) + ": " + current.toInventoryString());
-        }
-        System.out.println(underline);
-        System.out.println("<W> Weapon | <A> Armor | <P> Potion");
-
-        System.out.println();
-        System.out.println(ANSI_GREEN + "-" + ANSI_RESET + " Enter an index to equip/consume that item (e.g. \"1\").");
-        System.out.println(ANSI_GREEN + "-" + ANSI_RESET + " Enter D followed by an index to drop that item (e.g. \"D 1\").");
-        System.out.println(ANSI_GREEN + "-" + ANSI_RESET + " Enter S to view detailed player stats.");
-        System.out.println(ANSI_GREEN + "Enter one of the above, or E to exit:");
-        boolean receivedValidInput = false;
-        String input = "e";
-        while (!receivedValidInput) {
-            System.out.print("> " + ANSI_RESET);
-            input = scanner.nextLine().trim().toLowerCase();
-            if (input.charAt(0) == 'q') {
-                if (inBattle) {
-                    System.out.println("Quitting during a battle will end the battle!");
-                    System.out.println(ANSI_GREEN + "Are you sure you want to quit now? (Y/N):");
-                    if (scanYesNo()) {
-                        quitGame();
-                    }
-                } else {
-                    quitGame();
-                }
-            } else if (Character.isDigit(input.charAt(0))) {
-                try {
-                    int inputIndex = Integer.parseInt(input) - 1;
-                    if (!inventory.isEmpty() && inputIndex >= 0 && inputIndex < inventory.getItems().size()) {
-                        Item selectedItem = inventory.get(inputIndex);
-                        System.out.print(selectedItem.getName());
-                        if (inventory.equipOrConsume(inputIndex, player.getStats())) {
-                            if (selectedItem instanceof Potion) {
-                                System.out.println(" consumed. You feel strange.");
-                                potionConsumedDisplay((Potion) selectedItem);
-                                checkForDeath(); // health could (but should not) go down
-                            } else {
-                                System.out.println(" equipped.");
-                            }
-                        } else {
-                            System.out.println(" already equipped!");
-                        }
-                        receivedValidInput = true;
-                    }
-                } catch (NumberFormatException e) {
-                    // ignore exception and prompt again (invalid input)
-                }
-            } else if (input.charAt(0) == 'd' && input.contains(" ")) {
-                try {
-                    int inputIndex = Integer.parseInt(input.split(" ")[1]) - 1;
-                    if (!inventory.isEmpty() && inputIndex >= 0 && inputIndex < inventory.getItems().size()) {
-                        if (inputIndex == inventory.getEquippedWeaponIndex() || inputIndex == inventory.getEquippedArmorIndex()) {
-                            System.out.println(ANSI_GREEN + "This item is equipped. Drop it anyway? (Y/N):");
-                            if (!scanYesNo()) {
-                                break;
-                            }
-                        }
-                        System.out.println(inventory.get(inputIndex).getName() + " dropped."); // print before change
-                        inventory.remove(inputIndex);
-                        receivedValidInput = true;
-                    }
-                } catch (NumberFormatException e) {
-                    // ignore exception and prompt again (invalid input)
-                }
-            } else if (input.charAt(0) == 's') {
-                System.out.print(player.getStats().toDisplayString(player.getName(), inventory.getEquippedArmor()));
-                receivedValidInput = true;
-            } else if (input.charAt(0) == 'e') {
-                receivedValidInput = true;
-            }
-
-            if (!receivedValidInput) {
-                System.out.println(ANSI_RED + "Invalid input, try again:" + ANSI_GREEN);
-            }
-        }
-
-        if (input.charAt(0) != 'e') {
-            System.out.println(ANSI_GREEN + "Exit inventory? (Y/N):");
-            if (!scanYesNo()) {
-                showInventory(inBattle);
-            }
-        }
-    }
-
-    private void potionConsumedDisplay(Potion potion) {
-        String gainOrLoss = potion.getModification() < 0 ? "lose " : "gain ";
-        System.out.println("You " + gainOrLoss + Math.abs(potion.getModification()) + " [" + potion.getStat() + "].");
-    }
-
-    /* Minimal inventory method - shown when inventory is full - allows for item swapping */
-    private boolean showInventoryForSwap(Item swapIn) { // allows player to swap out items when inventory is full
-        System.out.println("Your inventory is full... You will need to swap something out in order to collect:");
-        System.out.println(swapIn.getName());
-        Inventory inventory = player.getInventory();
-        System.out.println(">---------------------------------<");
-        if (inventory.isEmpty()) {
-            System.out.println("Inventory is empty!"); // this should never occur
-        } else {
-            System.out.println("Inventory (" + inventory.getItems().size() + "/" + inventory.MAX_SIZE + "):");
-        }
-        int index = 1;
-        for (Item current : inventory.getItems()) {
-            System.out.println("\n" + (index++) + ": " + current.toInventoryString());
-        }
-        System.out.println(">---------------------------------<");
-        System.out.println("<W> Weapon | <A> Armor | <P> Potion");
-
-        System.out.println();
-        System.out.println(ANSI_GREEN + "-" + ANSI_RESET + " Enter an index to swap out that item (e.g. \"1\").");
-        System.out.println(ANSI_GREEN + "Enter an index, or E to exit/cancel:");
-        boolean itemSwapped = false;
-        boolean receivedValidInput = false;
-        String input = "e";
-        while (!receivedValidInput) {
-            System.out.print("> " + ANSI_RESET);
-            input = scanner.nextLine().toLowerCase();
-            if (input.charAt(0) == 'q') {
-                quitGame();
-            } else if (Character.isDigit(input.charAt(0))) {
-                try {
-                    int inputIndex = Integer.parseInt(input) - 1;
-                    if (!inventory.isEmpty() && inputIndex >= 0 && inputIndex < inventory.getItems().size()) {
-                        if (inputIndex == inventory.getEquippedWeaponIndex() || inputIndex == inventory.getEquippedArmorIndex()) {
-                            System.out.println(ANSI_GREEN + "This item is equipped. Swap it out anyway? (Y/N):");
-                            if (!scanYesNo()) {
-                                System.out.println("Try again:");
-                                itemSwapped = showInventoryForSwap(swapIn);
-                                break;
-                            }
-                        }
-                        System.out.println(inventory.get(inputIndex).getName() + " has been replaced with " + swapIn.getName() + ".");
-                        inventory.getItems().set(inputIndex, swapIn);
-                        itemSwapped = true;
-                        receivedValidInput = true;
-                    }
-                } catch (NumberFormatException e) {
-                    // ignore exception and prompt again (invalid input)
-                }
-            } else if (input.charAt(0) == 'e') {
-                receivedValidInput = true;
-            }
-
-            if (!receivedValidInput) {
-                System.out.println(ANSI_RED + "Invalid input, try again:" + ANSI_GREEN);
-            }
-        }
-        return itemSwapped;
-    } // returns whether or not item swapIn was added to inventory
-
-    private void showMap() {
-        System.out.println("You pull out your tattered map:");
-        System.out.print(player.getTravelMap().toDisplayString(player.getPosition()));
-    }
-
-    /* Give the player the option to look/move any direction, calls encounterNewScene on movement */
-    private void lookAndMovePlayer() {
-        Direction lookDirection = promptLookDirection();
-        System.out.println("You pull out your spyglass and look into the distant " + lookDirection + "...");
-        Point lookToPosition = lookDirection.getChange(player.getPosition());
-        dramaticPause(250);
+    public void look(Direction lookDirection) {
+        viewManager.displayTextLine("You pull out your spyglass and look into the distant " + lookDirection + "...");
+        lookToPosition = lookDirection.getChange(player.getPosition());
+        // DRAMATIC PAUSE
         if (isValidPosition(lookToPosition)) {
-            System.out.println(gameMap.getScene(lookToPosition).getView());
-            System.out.println(ANSI_GREEN + "Venture " + lookDirection + "? (Y/N):");
-            if (scanYesNo()) {
-                player.move(lookToPosition);
-                player.getTravelMap().setVisited(player.getPosition()); // record movement when player enters new tile
-                encounterNewScene(lookDirection.toString());
-            } else {
-                System.out.println(ANSI_GREEN + "Look a different direction? (Y/N):");
-                if (scanYesNo()) {
-                    lookAndMovePlayer(); // try again
-                }
-            }
+            viewManager.displayTextLine(gameMap.getScene(lookToPosition).getView());
+            viewManager.displayTextLine("Venture " + lookDirection + "?");
+            viewManager.enableGameplayButtons(Arrays.asList(GameplayButtons.YES, GameplayButtons.NO));
         } else {
-            System.out.println("You see a mighty cliff cascading downwards into the violent sea below.\nYou cannot venture there.");
-            System.out.println(ANSI_GREEN + "Look a different direction? (Y/N):");
-            if (scanYesNo()) {
-                lookAndMovePlayer(); // try again
-            }
+            viewManager.displayTextLine("You see a mighty cliff cascading downwards into the violent sea below.");
+            viewManager.displayTextLine("You cannot venture there.");
+            viewManager.enableGameplayButtons(Arrays.asList(GameplayButtons.N, GameplayButtons.E, GameplayButtons.S, GameplayButtons.W));
         }
+    }
+
+    public void goDirection() {
+        player.move(lookToPosition);
+        player.getTravelMap().setVisited(player.getPosition()); // record movement when player enters new tile
+        viewManager.updatePlayerInfo(player);
+        // encounterNewScene(lookDirection.toString());
+    }
+
+    public void pickNewDirection() {
+        viewManager.displayTextLine("Maybe a different direction would be better.");
+        adventure();
+    }
+
+    public void attack() {
+
+    }
+
+    public void runAway() {
+
+    }
+
+    public void quitGame() {
+
     }
 
     /* Determines the scene, prints generic text, then calls an appropriate encounter scene method */
+ /*
     private void encounterNewScene(String travelDirection) {
         System.out.println("You set off " + travelDirection + "ward.");
         printSlowTransition();
@@ -414,9 +159,10 @@ public class GameDriver {
                 encounterTrap((Trap) event);
                 break;
         }
-    }
+    }*/
 
-    /* Alternate between the players turn and the enemies turn until one dies */
+ /* Alternate between the players turn and the enemies turn until one dies */
+ /*
     private void encounterBattle(Enemy enemy) {
         int initialHealth = enemy.getStats().getHealth();
         while (!enemy.isDead() && doPlayerTurn(enemy, initialHealth)) { // run until enemy killed or player runs away
@@ -483,9 +229,10 @@ public class GameDriver {
             dramaticPause(500);
             System.out.println("Phew... You made it out alive.");
         }
-    }
+    }*/
 
-    /* Give the player multiple options in battle (attack, run, inventory) */
+ /* Give the player multiple options in battle (attack, run, inventory) */
+ /*
     private boolean doPlayerTurn(Enemy enemy, int initialHealth) {
         System.out.println(ANSI_GREEN + "Your options:" + ANSI_RESET);
         System.out.println(ANSI_GREEN + " (A)" + ANSI_RESET + " Attack");
@@ -545,13 +292,15 @@ public class GameDriver {
         }
         return true;
     } // returns false only when the player runs
+     */
 
-    /* Method to be called by Item when broken (let player know of broken item) */
+ /* Method to be called by Item when broken (let player know of broken item) */
     public static void notifyOfBrokenItem(String itemName) {
         System.out.println("...Your " + itemName + " is almost broken, this is the last good use...");
     }
 
     /* Give the player a chance to purchase a single item from a merchant */
+ /*
     private void encounterMerchant(Merchant merchant) {
         System.out.println("You check your pockets and find that you have " + player.getCoins() + " coins.");
         dramaticPause(250);
@@ -615,59 +364,28 @@ public class GameDriver {
         }
         dramaticPause(500);
         System.out.println("The merchant hurriedly packs up and sets off...");
-    }
+    }*/
 
+ /*
     private void encounterPassiveEvent(PassiveEvent passiveEvent) {
         System.out.println("You gain " + passiveEvent.getHpBonus() + " [Health].");
         player.getStats().modifyStat(StatType.HP, passiveEvent.getHpBonus());
-    }
+    }*/
 
+ /*
     private void encounterTrap(Trap trap) {
         String gainOrLoss = trap.getModification() < 0 ? "lose " : "gain ";
         System.out.println("You " + gainOrLoss + Math.abs(trap.getModification()) + " [" + trap.getStat() + "].");
         player.getStats().modifyStat(trap.getStat(), trap.getModification());
         checkForDeath(); // health could go down
-    }
+    }*/
 
-    /* Validates yes/no input, returns corresponding boolean */
-    private boolean scanYesNo() {
-        char input = 0;
-        while (input != 'y' && input != 'n') {
-            System.out.print("> " + ANSI_RESET);
-            input = scanner.nextLine().toLowerCase().charAt(0);
-            if (input == 'q') {
-                quitGame();
-            }
-            if (input != 'y' && input != 'n') {
-                System.out.println(ANSI_RED + "Invalid input, try again:" + ANSI_GREEN);
-            }
-        }
-        return input == 'y';
-    }
-
-    /* Validates a direction input, returns corresponding Direction (enum) */
-    private Direction promptLookDirection() {
-        Direction lookDirection = null;
-        System.out.println(ANSI_GREEN + "Enter a direction to look (N/S/E/W):");
-        while (lookDirection == null) {
-            System.out.print("> " + ANSI_RESET);
-            char input = scanner.nextLine().toLowerCase().charAt(0);
-            if (input == 'q') {
-                quitGame();
-            }
-            lookDirection = Direction.charToDirection(input); // null if invalid
-            if (lookDirection == null) {
-                System.out.println(ANSI_RED + "Invalid input, try again:" + ANSI_GREEN);
-            }
-        }
-        return lookDirection;
-    }
-
-    /* Ensures that a Point is within the game map */
+ /* Ensures that a Point is within the game map */
     private boolean isValidPosition(Point moveTo) {
         return (moveTo.x >= 0 && moveTo.x < MAP_SIZE && moveTo.y >= 0 && moveTo.y < MAP_SIZE);
     }
 
+    /*
     private void printSlowTransition() {
         dramaticPause(250);
         System.out.print(". ");
@@ -677,17 +395,19 @@ public class GameDriver {
         System.out.print(".");
         dramaticPause(500);
         System.out.println();
-    }
+    }*/
 
+ /*
     private void dramaticPause(int miliseconds) {
         try {
             Thread.sleep(miliseconds);
         } catch (InterruptedException ex) {
             // IGNORE
         }
-    }
+    }*/
 
-    /* Checks for player death - delete game save on death */
+ /* Checks for player death - delete game save on death */
+ /*
     private void checkForDeath() {
         if (player.getStats().getHealth() <= 0) {
             printSlowTransition();
@@ -697,19 +417,21 @@ public class GameDriver {
             dataKeeper.deleteGameSave();
             System.exit(0);
         }
-    }
+    }*/
 
+ /*
     private void quitGame() {
         System.out.println("Game ended...\n(Progress Saved)");
         dataKeeper.saveGame(gameMap, player); // save game on exit
         System.exit(0);
-    }
-
+    }*/
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
         } catch (Exception ex) {
             System.out.println("ERROR SETTING LOOK AND FEEL");
+            System.out.println("PLEASE ENSURE THAT THE FLATLAF LIBRARY EXISTS");
+            System.out.println("THE UI IS DESIGNED ONLY FOR FLATLAF DARK");
         }
         GameDriver driver = new GameDriver();
         driver.runGame();
