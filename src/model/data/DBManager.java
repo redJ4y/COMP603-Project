@@ -96,19 +96,35 @@ public class DBManager {
     }
 
     public void saveGame(GameMap gameMap, Player player) {
-        // prepare the save record:
-        String preparedStatement = "INSERT INTO SAVES VALUES ('" + username + "', ?, ?, ?, ?, ?, 0)";
+        // quickly check if the record already exists (do not reuse the result of the earlier check):
+        boolean alreadyExists = false;
         try {
-            PreparedStatement statement = connection.prepareStatement(preparedStatement);
-            for (int i = 1; i <= 5; i++) {
-                statement.setObject(i, null);
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT USERNAME FROM SAVES WHERE USERNAME = '" + username + "'");
+            if (rs.next()) {
+                alreadyExists = true;
             }
-            statement.executeUpdate();
+            rs.close();
             statement.close();
         } catch (SQLException ex) {
-            System.out.println("ERROR CREATING GAME SAVE");
+            System.out.println("ERROR CHECKING FOR GAME SAVE");
             System.out.println(ex.getMessage());
         }
+        if (!alreadyExists) {
+            // IF the save does NOT already exist, prepare a new record:
+            String preparedStatement = "INSERT INTO SAVES VALUES ('" + username + "', ?, ?, ?, ?, ?, 0)";
+            try {
+                PreparedStatement statement = connection.prepareStatement(preparedStatement);
+                for (int i = 1; i <= 5; i++) {
+                    statement.setObject(i, null);
+                }
+                statement.executeUpdate();
+                statement.close();
+            } catch (SQLException ex) {
+                System.out.println("ERROR CREATING GAME SAVE");
+                System.out.println(ex.getMessage());
+            }
+        } // (otherwise the old save will be overwritten)
 
         // complete / fill out the save record:
         boolean saveWorked = saveGameMap(gameMap);
