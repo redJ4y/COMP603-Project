@@ -12,6 +12,8 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.Random;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import model.entity.Inventory;
 import model.entity.StatType;
@@ -38,7 +40,7 @@ public class GameDriver {
     private Point lookToPosition;
     private Merchant currentMerchant;
     private Enemy currentEnemy;
-    private int enemyInitialHealth;
+    private int enemyInitialHealth; // not validated
 
     public GameDriver() {
         dataKeeper = new DBManager();
@@ -51,7 +53,7 @@ public class GameDriver {
         lookToPosition = null;
         currentMerchant = null;
         currentEnemy = null;
-        enemyInitialHealth = -1;
+        enemyInitialHealth = 1;
     }
 
     public void runGame() {
@@ -252,7 +254,7 @@ public class GameDriver {
 
     /* The player attacks the current enemy */
     private void doPlayerTurn() {
-        if (currentEnemy != null && enemyInitialHealth > -1) { // validate current game state
+        if (currentEnemy != null) { // validate current game state
             int damage = player.getAttack(currentEnemy.getStats());
             if (!player.hasWeapon()) {
                 viewManager.displayTextLine("You punch hard with your bare fist...");
@@ -277,7 +279,6 @@ public class GameDriver {
             viewManager.addDelay(500);
             currentEnemy.getStats().modifyStat(StatType.HP, -1 * damage);
             viewManager.displayTextLine("Damage dealt: " + damage + " | Enemy health: " + (int) (100 * ((double) currentEnemy.getStats().getHealth() / enemyInitialHealth)) + "%");
-            enemyInitialHealth = -1; // reset after using
         }
     }
 
@@ -399,6 +400,7 @@ public class GameDriver {
             sleepDriverThread(viewManager.getTimeDelayed() + 250);
             // restart game (new pregame menu):
             dataKeeper = new DBManager();
+            ((JFrame) SwingUtilities.getWindowAncestor(viewManager)).dispose(); // close old window
             viewManager = new ViewManager(this);
             runGame();
         }

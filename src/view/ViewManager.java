@@ -214,10 +214,12 @@ public class ViewManager extends JPanel {
     public void purchaseItem(int index) { // used by merchant panel
         // index is already validated
         gameDriver.purchaseFromMerchant(index);
+        setGameArea(GameAreaOptions.GAMEPLAY);
     }
 
     public void collectLoot() { // used by loot panel
         gameDriver.collectEnemyLoot();
+        setGameArea(GameAreaOptions.GAMEPLAY);
     }
 
     public void leavePressed(GameAreaOptions source) { // used by merchant and loot panels

@@ -54,10 +54,12 @@ public class Weapon extends Item implements Serializable {
         if (durability < 1) {
             durability = 0;
 
-            setBroken();
-            damageMin = 0;
-            damageMax /= 10; // greatly reduce damageMax
-            armorPiercing /= 10; // greatly reduce armorPiercing
+            if (!getName().split(" ")[0].equals("Broken")) { // only break once
+                setBroken();
+                damageMin = 0;
+                damageMax /= 10; // greatly reduce damageMax
+                armorPiercing /= 10; // greatly reduce armorPiercing
+            }
         }
     }
 

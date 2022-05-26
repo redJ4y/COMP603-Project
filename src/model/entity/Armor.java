@@ -39,9 +39,11 @@ public class Armor extends Item implements Serializable {
         if (durability < 1) {
             durability = 0;
 
-            setBroken();
-            protection /= 10; // greatly reduce protection
-            agility /= 10; // greatly reduce agility
+            if (!getName().split(" ")[0].equals("Broken")) { // only break once
+                setBroken();
+                protection /= 10; // greatly reduce protection
+                agility /= 10; // greatly reduce agility
+            }
         }
     }
 
