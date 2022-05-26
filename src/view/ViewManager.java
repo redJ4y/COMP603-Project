@@ -178,11 +178,17 @@ public class ViewManager extends JPanel {
     public void gameplayButtonPressed(GameplayButtons button) { // used by gameplay panel
         // convert button press into action method call:
         switch (button) {
-            case N: // fall through
-            case S: // fall through
-            case E: // fall through
+            case N:
+                gameDriver.look(Direction.charToDirection('n'));
+                break;
+            case S:
+                gameDriver.look(Direction.charToDirection('s'));
+                break;
+            case E:
+                gameDriver.look(Direction.charToDirection('e'));
+                break;
             case W:
-                gameDriver.look(Direction.charToDirection(button.name().toLowerCase().charAt(0)));
+                gameDriver.look(Direction.charToDirection('w'));
                 break;
             case YES:
                 gameDriver.goDirection();
@@ -207,31 +213,34 @@ public class ViewManager extends JPanel {
 
     public void purchaseItem(int index) { // used by merchant panel
         // index is already validated
+        gameDriver.purchaseFromMerchant(index);
     }
 
     public void collectLoot() { // used by loot panel
-
+        gameDriver.collectEnemyLoot();
     }
 
     public void leavePressed(GameAreaOptions source) { // used by merchant and loot panels
+        // the gameplay area is already prepared
+        gameDriver.resetEventContext(); // end merchant/loot period
         setGameArea(GameAreaOptions.GAMEPLAY);
-
     }
 
     public void equipOrConsumePressed(int index) { // used by inventory panel
         // index is already validated
+        gameDriver.inventoryEquipOrConsume(index);
     }
 
     public void dropPressed(int index) { // used by inventory panel
         // index is already validated
-
+        gameDriver.inventoryDrop(index);
         lootView.invNotFull(); // make sure the user can pick up a waiting item
     }
 
     public void usernameSubmitted(String username) { // used by pregame menu
         // username is already validated
         gameDriver.checkForGameSave(username);
-        hidePregameMenu(); // switch to playing the game (info has been updated)
+        hidePregameMenu(); // switch to playing the game
     }
     /* ----- End methods to be called by view components ----- */
 }
