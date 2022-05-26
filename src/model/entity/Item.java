@@ -16,7 +16,7 @@ public abstract class Item implements Serializable {
 
     private final ItemType type;
     private String name;
-    private String description;
+    private final String description;
     private final int rarity;
 
     public Item(ItemType type, String name, String description, int rarity) {

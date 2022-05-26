@@ -10,6 +10,8 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -52,6 +54,13 @@ public class ViewManager extends JPanel {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        // notify gameDriver when window is closed:
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                gameDriver.applicationClosing();
+            }
+        });
     }
 
     private void initializePanels() {
@@ -59,6 +68,7 @@ public class ViewManager extends JPanel {
         gameArea = new JPanel(new CardLayout());
         playerArea = new JTabbedPane();
         playerArea.setBorder(new EmptyBorder(0, 6, 12, 6));
+        playerArea.setFocusable(false);
         super.add(gameArea, BorderLayout.WEST);
         super.add(playerArea, BorderLayout.EAST);
 
@@ -105,6 +115,19 @@ public class ViewManager extends JPanel {
         mapView.updateMap(player.getTravelMap(), player.getPosition());
     }
 
+    public void updatePlayerInfoDirectly(Player player) {
+        // does not wait for printing to complete
+        inventoryView.updateInventory(player);
+        statsView.updateStats(player);
+        mapView.updateMap(player.getTravelMap(), player.getPosition());
+    }
+
+    public void disablePlayerInfoDirectly() {
+        inventoryView.setEnabled(false);
+        statsView.setEnabled(false);
+        mapView.setEnabled(false);
+    }
+
     /* Printing Methods */
     public void displayTextLine(String text) {
         gameplayView.addText(text + "\n");
@@ -136,6 +159,16 @@ public class ViewManager extends JPanel {
     public void setLoot(Item loot, int numCoins, boolean invFull) {
         lootView.prepPanel(loot, numCoins, invFull);
         setGameArea(GameAreaOptions.LOOT); // to be undone when finished
+    }
+
+    public void addDelay(int ms) {
+        // adds more delay (there should be a default delay)
+        // TODO: allow printing text with a delay (from the last message). only enable buttons when all text in the queue is printed
+        // same applies to setMerchant, setLoot, updatePlayerInfo
+    }
+
+    public int getTimeDelayed() {
+        return 2000; // calculate the time until all pending text is printed
     }
 
     /* ----- End methods to be called by GameDriver ----- 
@@ -202,5 +235,3 @@ public class ViewManager extends JPanel {
     }
     /* ----- End methods to be called by view components ----- */
 }
-
-// TODO: allow printing text with a delay (from the last message). only enable buttons when all text in the queue is printed
