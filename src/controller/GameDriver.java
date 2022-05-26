@@ -140,6 +140,7 @@ public class GameDriver {
         viewManager.addDelay(250);
         if (isValidPosition(lookToPosition)) {
             viewManager.displayTextLine(gameMap.getScene(lookToPosition).getView());
+            viewManager.addDelay(500);
             viewManager.displayTextLine("Venture " + lookDirectionString + "?");
             viewManager.enableGameplayButtons(Arrays.asList(GameplayButtons.YES, GameplayButtons.NO));
         } else {
@@ -176,6 +177,8 @@ public class GameDriver {
 
     public void runAway() {
         if (currentEnemy != null) { // validate current game state
+            viewManager.displayTextLine("You turn and run.");
+            printSlowTransition();
             // give enemy one last chance to attack (33% possibility)...
             if ((new Random()).nextInt(3) == 0) {
                 int damage = currentEnemy.getAttack(player.getStats(), player.getInventory().getEquippedArmor());

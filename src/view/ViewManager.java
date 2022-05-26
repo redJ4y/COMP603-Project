@@ -14,6 +14,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -37,13 +39,45 @@ public class ViewManager extends JPanel {
     private InventoryView inventoryView;
     private StatsView statsView;
 
+    private final BlockingDeque<Runnable> tasks; // queue of tasks given by the driver
+    // a BlockingDeque blocks the task runner until more tasks are added
+    private final TaskRunner taskRunner; // private class below
+
     public ViewManager(GameDriver gameDriver) {
         super(new BorderLayout());
         this.gameDriver = gameDriver;
+        tasks = new LinkedBlockingDeque<>(); // use a deque so that tasks can be added to the front
+        taskRunner = new TaskRunner(); // started (new thread) in display()
         initializePanels();
 
         pregameMenu = new PregameMenuView(this);
         super.add(pregameMenu, BorderLayout.CENTER);
+    }
+
+    /* Private class TaskRunner:
+    * A TaskRunner waits in a separate thread for tasks to be enqueued.
+    * It then runs them in order.
+     */
+    private class TaskRunner implements Runnable {
+
+        private boolean stop;
+
+        public void requestStop() { // called when the window is closed
+            stop = true;
+        }
+
+        @Override
+        public void run() {
+            stop = false;
+            while (!stop) { // wait for tasks to show up
+                try {
+                    tasks.takeFirst().run();
+                    Thread.sleep(50); // reduce CPU time and add default delay
+                } catch (InterruptedException e) {
+                    // IGNORE
+                }
+            }
+        }
     }
 
     public void display() {
@@ -58,9 +92,13 @@ public class ViewManager extends JPanel {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                taskRunner.requestStop(); // best practice when a new window is opened (on death)
                 gameDriver.applicationClosing();
             }
         });
+        // start the task running thread:
+        Thread thread = new Thread(taskRunner);
+        thread.start();
     }
 
     private void initializePanels() {
@@ -109,66 +147,93 @@ public class ViewManager extends JPanel {
     }
 
     /* ----- Methods to be called by GameDriver below ----- */
+    // AKA "Tasks"
     public void updatePlayerInfo(Player player) {
-        inventoryView.updateInventory(player);
-        statsView.updateStats(player);
-        mapView.updateMap(player.getTravelMap(), player.getPosition());
+        tasks.addLast((Runnable) () -> {
+            inventoryView.updateInventory(player);
+            statsView.updateStats(player);
+            mapView.updateMap(player.getTravelMap(), player.getPosition());
+        });
     }
 
-    public void updatePlayerInfoDirectly(Player player) {
-        // does not wait for printing to complete
-        inventoryView.updateInventory(player);
-        statsView.updateStats(player);
-        mapView.updateMap(player.getTravelMap(), player.getPosition());
+    public void updatePlayerInfoDirectly(Player player) { // direct
+        // does not wait for other tasks to complete (addFirst)
+        tasks.addFirst((Runnable) () -> {
+            inventoryView.updateInventory(player);
+            statsView.updateStats(player);
+            mapView.updateMap(player.getTravelMap(), player.getPosition());
+        });
     }
 
-    public void disablePlayerInfoDirectly() {
-        inventoryView.setEnabled(false);
-        statsView.setEnabled(false);
-        mapView.setEnabled(false);
+    public void disablePlayerInfoDirectly() { // direct
+        // does not wait for other tasks to complete (addFirst)
+        tasks.addFirst((Runnable) () -> {
+            inventoryView.setEnabled(false);
+            statsView.setEnabled(false);
+            mapView.setEnabled(false);
+        });
     }
 
-    /* Printing Methods */
+    /* Printing Methods Below */
     public void displayTextLine(String text) {
-        gameplayView.addText(text + "\n");
+        tasks.addLast((Runnable) () -> {
+            gameplayView.addText(text + "\n");
+        });
     }
 
     public void displayTextLine() {
-        gameplayView.addText("\n");
+        tasks.addLast((Runnable) () -> {
+            gameplayView.addText("\n");
+        });
     }
 
     public void displayText(String text) {
-        gameplayView.addText(text);
+        tasks.addLast((Runnable) () -> {
+            gameplayView.addText(text);
+        });
     } // End Printing Methods
 
     public void enableGameplayButtons(List<GameplayButtons> buttons) {
-        gameplayView.enableButtons(buttons);
+        tasks.addLast((Runnable) () -> {
+            gameplayView.enableButtons(buttons);
+        });
     } // only the selected buttons will be enabled
 
     public void enableGameplayButton(GameplayButtons button) { // for a single button
-        List<GameplayButtons> wrapperList = new ArrayList<>(1);
-        wrapperList.add(button);
-        gameplayView.enableButtons(wrapperList);
+        tasks.addLast((Runnable) () -> {
+            List<GameplayButtons> wrapperList = new ArrayList<>(1);
+            wrapperList.add(button);
+            gameplayView.enableButtons(wrapperList);
+        });
     } // only the selected button will be enabled
 
     public void setMerchant(Merchant merchant, int coins, boolean invFull) {
-        merchantView.prepPanel(merchant, coins, invFull);
-        setGameArea(GameAreaOptions.MERCHANT); // to be undone when finished
+        tasks.addLast((Runnable) () -> {
+            merchantView.prepPanel(merchant, coins, invFull);
+            setGameArea(GameAreaOptions.MERCHANT); // to be undone when finished
+        });
     }
 
     public void setLoot(Item loot, int numCoins, boolean invFull) {
-        lootView.prepPanel(loot, numCoins, invFull);
-        setGameArea(GameAreaOptions.LOOT); // to be undone when finished
+        tasks.addLast((Runnable) () -> {
+            lootView.prepPanel(loot, numCoins, invFull);
+            setGameArea(GameAreaOptions.LOOT); // to be undone when finished
+        });
     }
 
     public void addDelay(int ms) {
-        // adds more delay (there should be a default delay)
-        // TODO: allow printing text with a delay (from the last message). only enable buttons when all text in the queue is printed
-        // same applies to setMerchant, setLoot, updatePlayerInfo
+        tasks.addLast((Runnable) () -> {
+            try {
+                Thread.sleep(ms);
+            } catch (InterruptedException ex) {
+                // IGNORE
+            }
+        });
     }
 
     public int getTimeDelayed() {
-        return 2000; // calculate the time until all pending text is printed
+        return 2000; // TODO: calculate the time until tasks are done
+        // ALSO TODO: fix driver quitting methods, they don't seem to work
     }
 
     /* ----- End methods to be called by GameDriver ----- 
