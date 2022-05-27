@@ -27,7 +27,9 @@ public class TravelMap implements Serializable {
     }
 
     public void setVisited(Point position) {
-        history[position.x][position.y] = 'O';
+        if (history[position.x][position.y] != 'X') {
+            history[position.x][position.y] = 'O';
+        }
     }
 
     public void setDefeated(Point position) {
