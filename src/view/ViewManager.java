@@ -80,6 +80,14 @@ public class ViewManager extends JPanel {
         }
     }
 
+    public void stopTaskRunner() {
+        taskRunner.requestStop();
+    }
+
+    public int getNumTasks() {
+        return tasks.size();
+    }
+
     public void display() {
         JFrame frame = new JFrame("RPG Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -92,7 +100,6 @@ public class ViewManager extends JPanel {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                taskRunner.requestStop(); // best practice when a new window is opened (on death)
                 gameDriver.applicationClosing();
             }
         });
@@ -158,7 +165,17 @@ public class ViewManager extends JPanel {
 
     public void updatePlayerInfoDirectly(Player player) { // direct
         // does not wait for other tasks to complete (addFirst)
-        tasks.addFirst((Runnable) () -> {
+        if (!tasks.isEmpty()) {
+            // only necessary when there are other tasks
+            tasks.addFirst((Runnable) () -> {
+                inventoryView.updateInventory(player);
+                statsView.updateStats(player);
+                mapView.updateMap(player.getTravelMap(), player.getPosition());
+            });
+        }
+        // the user may modify their inventory after a call to updatePlayerInfo is enqueued
+        // to avoid this edge case the newest player will be used again at the end of the queue
+        tasks.addLast((Runnable) () -> {
             inventoryView.updateInventory(player);
             statsView.updateStats(player);
             mapView.updateMap(player.getTravelMap(), player.getPosition());
@@ -229,11 +246,6 @@ public class ViewManager extends JPanel {
                 // IGNORE
             }
         });
-    }
-
-    public int getTimeDelayed() {
-        return 2000; // TODO: calculate the time until tasks are done
-        // ALSO TODO: fix driver quitting methods, they don't seem to work
     }
 
     /* ----- End methods to be called by GameDriver ----- 

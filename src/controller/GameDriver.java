@@ -12,6 +12,8 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -224,7 +226,7 @@ public class GameDriver {
                     viewManager.displayTextLine("Phew... It's a: " + event.getName());
                     viewManager.addDelay(250);
                     viewManager.displayTextLine(event.getDescription());
-                    viewManager.addDelay(500);
+                    printSlowTransition();
                     encounterMerchant((Merchant) event);
                     viewManager.enableGameplayButton(GameplayButtons.ADVENTURE);
                     break;
@@ -325,6 +327,7 @@ public class GameDriver {
                 viewManager.addDelay(500);
                 viewManager.displayTextLine("And, what's this?");
                 printSlowTransition();
+                viewManager.addDelay(1000);
                 viewManager.setLoot(currentEnemy.getLoot(), coinsFound, !player.getInventory().hasSpace());
                 viewManager.displayTextLine("...You have conqered another beast!"); // visible after loot panel
             }
@@ -333,7 +336,7 @@ public class GameDriver {
 
     /* Method to be called by Item when broken (let player know of broken item) */
     public static void notifyOfBrokenItem(String itemName) {
-        viewManager.displayTextLine("...Your " + itemName + " is almost broken, this is the last good use...");
+        viewManager.displayTextLine("...Your " + itemName + " is nearly broken!");
     }
 
     /* Give the player a chance to purchase a single item from a merchant */
@@ -346,8 +349,10 @@ public class GameDriver {
             viewManager.displayTextLine("Too bad.");
             currentMerchant = null; // reset after using
         } else {
+            viewManager.displayTextLine("The merchant begins to unpack.");
+            printSlowTransition();
+            viewManager.addDelay(1000);
             viewManager.setMerchant(currentMerchant, player.getCoins(), !player.getInventory().hasSpace());
-            viewManager.addDelay(500);
             viewManager.displayTextLine("The merchant hurriedly packs up and sets off..."); // visible after merchant panel
         }
     }
@@ -378,8 +383,8 @@ public class GameDriver {
         viewManager.displayText(". ");
         viewManager.addDelay(500);
         viewManager.displayText(".");
-        viewManager.addDelay(500);
         viewManager.displayTextLine();
+        viewManager.addDelay(500);
     }
 
     /* Checks for player death - delete game save on death */
@@ -388,49 +393,41 @@ public class GameDriver {
             printSlowTransition();
             viewManager.displayTextLine("You fall slowly to the ground.");
             printSlowTransition();
-            viewManager.displayTextLine("Game over...");
-            viewManager.displayTextLine("Progress Lost!");
-            viewManager.disablePlayerInfoDirectly(); // block further interaction (allow driver to sleep)
+            viewManager.displayTextLine("Game over!");
+            printSlowTransition();
+            viewManager.displayTextLine("Progress lost!");
+            viewManager.disablePlayerInfoDirectly(); // BLOCK FURTHER INTERACTION
             dataKeeper.deleteGameSave();
             // block the player from saving on close:
             gameMap = null; // to be re-initialized
             player = null; // to be re-initialized
+            printSlowTransition();
+            viewManager.displayTextLine("(Returning to pre-game menu)");
 
-            printSlowTransition();
-            viewManager.displayTextLine("GAME EXITING");
-            printSlowTransition();
             // wait until all text is displayed...
-            sleepDriverThread(viewManager.getTimeDelayed() + 250);
-            // restart game (new pregame menu):
-            dataKeeper = new DBManager();
-            ((JFrame) SwingUtilities.getWindowAncestor(viewManager)).dispose(); // close old window
-            viewManager = new ViewManager(this);
-            runGame();
+            GameDriver thisReference = this; // for use within the timer task
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // restart game (new pregame menu):
+                    viewManager.stopTaskRunner(); // best practice
+                    ((JFrame) SwingUtilities.getWindowAncestor(viewManager)).dispose(); // close old window
+                    dataKeeper = new DBManager();
+                    viewManager = new ViewManager(thisReference);
+                    runGame();
+                }
+            }, viewManager.getNumTasks() * 300 + 250); // delay time (approximate)
         }
     }
 
     public void quitGame() {
-        viewManager.displayTextLine("Game ended...");
-        viewManager.displayTextLine("Progress Saved!");
-        viewManager.disablePlayerInfoDirectly(); // block further interaction (allow driver to sleep)
         if (gameMap != null && player != null) {
-            dataKeeper.saveGame(gameMap, player); // save game on exit
+            dataKeeper.saveGame(gameMap, player); // save game on quit
+            // block a second save from occuring:
+            gameMap = null;
+            player = null;
         }
-
-        printSlowTransition();
-        viewManager.displayTextLine("GAME EXITING");
-        printSlowTransition();
-        // wait until all text is displayed...
-        sleepDriverThread(viewManager.getTimeDelayed() + 250);
         System.exit(0);
-    }
-
-    private void sleepDriverThread(int miliseconds) {
-        try {
-            Thread.sleep(miliseconds);
-        } catch (InterruptedException ex) {
-            // IGNORE
-        }
     } // ----- End gameplay methods -----
 
     public void applicationClosing() {
