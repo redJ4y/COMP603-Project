@@ -27,6 +27,12 @@ import model.map.Scene;
 import model.map.Trap;
 import view.GameplayButtons;
 
+/*
+TODO:
+Do 5 test cases (well named, covering important functionality)
+Go over every class adding comments (need method/class comments!)
+Remove unnecessary stuff (like devtools, old game data, and oldgamedriver)
+ */
 public class GameDriver {
 
     public final static int MAP_SIZE = 17; // should not be changed

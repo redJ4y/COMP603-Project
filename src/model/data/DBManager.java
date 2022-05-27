@@ -64,6 +64,7 @@ public class DBManager {
             connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
         } catch (SQLException ex) {
             System.out.println("ERROR: COULD NOT CONNECT TO DATABASE");
+            System.out.println("Close existing instances and try again.");
             System.out.println(ex.getMessage());
         }
     }
