@@ -93,16 +93,19 @@ public class GameplayView extends javax.swing.JPanel {
         noButton = new javax.swing.JButton();
         quitButton = new javax.swing.JButton();
 
-        scrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         scrollPane.setFocusable(false);
 
         textArea.setEditable(false);
         textArea.setBackground(new java.awt.Color(51, 51, 51));
         textArea.setColumns(20);
-        textArea.setFont(new java.awt.Font("Palatino Linotype", 0, 11)); // NOI18N
+        textArea.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
         textArea.setRows(5);
         textArea.setFocusable(false);
         scrollPane.setViewportView(textArea);
+
+        directionPanel.setMaximumSize(new java.awt.Dimension(90, 90));
+        directionPanel.setMinimumSize(new java.awt.Dimension(90, 90));
 
         northButton.setText("N");
         northButton.setFocusable(false);
@@ -175,6 +178,9 @@ public class GameplayView extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        controlPanel.setMaximumSize(new java.awt.Dimension(270, 90));
+        controlPanel.setMinimumSize(new java.awt.Dimension(270, 90));
+
         adventureButton.setText("Adventure");
         adventureButton.setFocusable(false);
         adventureButton.addActionListener(new java.awt.event.ActionListener() {
@@ -234,9 +240,7 @@ public class GameplayView extends javax.swing.JPanel {
                         .addComponent(yesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(noButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(quitButton))
+                    .addComponent(quitButton, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
                         .addComponent(adventureButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -273,7 +277,7 @@ public class GameplayView extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(directionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(controlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(controlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -283,8 +287,8 @@ public class GameplayView extends javax.swing.JPanel {
                 .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(directionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(controlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(directionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(controlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents

@@ -266,7 +266,7 @@ public class InventoryView extends javax.swing.JPanel {
             Item selection = inventoryItems.get(selectedIndex);
             if (selection instanceof Weapon || selection instanceof Armor) { // further validate
                 selectedItem.becomeLabel(selection.getName() + " equipped.");
-                viewManager.equipOrConsumePressed(selectedIndex);
+                viewManager.equipPressed(selectedIndex);
             }
         }
     }//GEN-LAST:event_equipButtonActionPerformed
@@ -309,7 +309,7 @@ public class InventoryView extends javax.swing.JPanel {
             Item selection = inventoryItems.get(selectedIndex);
             if (selection instanceof Potion) { // further validate
                 selectedItem.becomeLabel(selection.getName() + " consumed.", ((Potion) selection).getSpecsString());
-                viewManager.equipOrConsumePressed(selectedIndex);
+                viewManager.consumePressed(selectedIndex);
             }
         }
     }//GEN-LAST:event_consumeButtonActionPerformed

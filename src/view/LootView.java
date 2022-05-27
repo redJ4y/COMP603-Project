@@ -58,18 +58,18 @@ public class LootView extends javax.swing.JPanel {
         leaveButton = new javax.swing.JButton();
         invFullLabel = new javax.swing.JLabel();
 
-        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
+        setMaximumSize(new java.awt.Dimension(378, 32767));
 
-        jLabel1.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Palatino Linotype", 0, 11)); // NOI18N
         jLabel1.setText(". . .");
 
-        numCoinsText.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
+        numCoinsText.setFont(new java.awt.Font("Palatino Linotype", 0, 11)); // NOI18N
         numCoinsText.setText("You search the corpse and find 999 coins!");
 
-        jLabel3.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Palatino Linotype", 0, 11)); // NOI18N
         jLabel3.setText("And, what's this?");
 
-        jLabel4.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Palatino Linotype", 0, 11)); // NOI18N
         jLabel4.setText(". . .");
 
         itemHolder.setMaximumSize(new java.awt.Dimension(366, 58));
@@ -80,7 +80,7 @@ public class LootView extends javax.swing.JPanel {
         itemHolder.setLayout(itemHolderLayout);
         itemHolderLayout.setHorizontalGroup(
             itemHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 366, Short.MAX_VALUE)
         );
         itemHolderLayout.setVerticalGroup(
             itemHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -114,13 +114,12 @@ public class LootView extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(itemHolder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(63, 63, 63)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(numCoinsText, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+                            .addComponent(numCoinsText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2)
                             .addComponent(jLabel4)
                             .addComponent(jLabel3)
@@ -132,7 +131,10 @@ public class LootView extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(collectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(leaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(leaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(itemHolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -150,13 +152,13 @@ public class LootView extends javax.swing.JPanel {
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(itemHolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(102, 102, 102)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(collectButton)
                     .addComponent(leaveButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(invFullLabel)
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(142, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

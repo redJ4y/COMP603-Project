@@ -16,7 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -51,7 +54,7 @@ public class ViewManager extends JPanel {
         initializePanels();
 
         pregameMenu = new PregameMenuView(this);
-        super.add(pregameMenu, BorderLayout.CENTER);
+        super.add(pregameMenu, BorderLayout.NORTH);
     }
 
     /* Private class TaskRunner:
@@ -95,7 +98,6 @@ public class ViewManager extends JPanel {
         frame.setMinimumSize(new Dimension(800, 488));
         frame.pack();
         frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
         // notify gameDriver when window is closed:
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -103,6 +105,7 @@ public class ViewManager extends JPanel {
                 gameDriver.applicationClosing();
             }
         });
+        frame.setVisible(true);
         // start the task running thread:
         Thread thread = new Thread(taskRunner);
         thread.start();
@@ -114,16 +117,22 @@ public class ViewManager extends JPanel {
         playerArea = new JTabbedPane();
         playerArea.setBorder(new EmptyBorder(0, 6, 12, 6));
         playerArea.setFocusable(false);
-        super.add(gameArea, BorderLayout.WEST);
-        super.add(playerArea, BorderLayout.EAST);
+        super.add(gameArea, BorderLayout.CENTER); // center adjusts both height and width
+        super.add(playerArea, BorderLayout.EAST); // east only adjusts height
 
         // initialize gameArea:
         gameplayView = new GameplayView(this);
         gameArea.add(gameplayView, GameAreaOptions.GAMEPLAY.name());
         merchantView = new MerchantView(this);
-        gameArea.add(merchantView, GameAreaOptions.MERCHANT.name());
+        Box merchantViewHolder = new Box(BoxLayout.Y_AXIS); // holder centers merchant view
+        merchantViewHolder.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        merchantViewHolder.add(merchantView);
+        gameArea.add(merchantViewHolder, GameAreaOptions.MERCHANT.name());
         lootView = new LootView(this);
-        gameArea.add(lootView, GameAreaOptions.LOOT.name());
+        Box lootViewHolder = new Box(BoxLayout.Y_AXIS); // holder centers loot view
+        lootViewHolder.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        lootViewHolder.add(lootView);
+        gameArea.add(lootViewHolder, GameAreaOptions.LOOT.name());
 
         // initialize playerArea:
         int scaleMode = Image.SCALE_SMOOTH; // set the scale mode for icon scaling
@@ -305,9 +314,15 @@ public class ViewManager extends JPanel {
         setGameArea(GameAreaOptions.GAMEPLAY);
     }
 
-    public void equipOrConsumePressed(int index) { // used by inventory panel
+    public void equipPressed(int index) { // used by inventory panel
         // index is already validated
         gameDriver.inventoryEquipOrConsume(index);
+    }
+
+    public void consumePressed(int index) { // used by inventory panel
+        // index is already validated
+        gameDriver.inventoryEquipOrConsume(index);
+        lootView.invNotFull(); // make sure the user can pick up a waiting item
     }
 
     public void dropPressed(int index) { // used by inventory panel

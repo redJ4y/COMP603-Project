@@ -23,7 +23,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="directionPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="controlPanel" max="32767" attributes="0"/>
+                      <Component id="controlPanel" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -37,8 +37,8 @@
               <Component id="scrollPane" pref="380" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="directionPanel" max="32767" attributes="0"/>
-                  <Component id="controlPanel" max="32767" attributes="0"/>
+                  <Component id="directionPanel" max="-2" attributes="0"/>
+                  <Component id="controlPanel" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -48,7 +48,7 @@
   <SubComponents>
     <Container class="javax.swing.JScrollPane" name="scrollPane">
       <Properties>
-        <Property name="verticalScrollBarPolicy" type="int" value="22"/>
+        <Property name="verticalScrollBarPolicy" type="int" value="21"/>
         <Property name="focusable" type="boolean" value="false"/>
       </Properties>
 
@@ -62,7 +62,7 @@
             </Property>
             <Property name="columns" type="int" value="20"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Palatino Linotype" size="11" style="0"/>
+              <Font name="Palatino Linotype" size="12" style="0"/>
             </Property>
             <Property name="rows" type="int" value="5"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -71,6 +71,14 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="directionPanel">
+      <Properties>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[90, 90]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[90, 90]"/>
+        </Property>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -162,6 +170,14 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="controlPanel">
+      <Properties>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[270, 90]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[270, 90]"/>
+        </Property>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -174,10 +190,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="noButton" min="-2" pref="60" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="quitButton" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="quitButton" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="adventureButton" min="-2" pref="85" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>

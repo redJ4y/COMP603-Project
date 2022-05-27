@@ -106,22 +106,23 @@ public class MerchantView extends javax.swing.JPanel {
         purchaseButton = new javax.swing.JButton();
         leaveButton = new javax.swing.JButton();
         invFullLabel = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
-        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
+        setMaximumSize(new java.awt.Dimension(378, 32767));
 
-        jLabel1.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Palatino Linotype", 0, 11)); // NOI18N
         jLabel1.setText(". . .");
 
-        nameText.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
+        nameText.setFont(new java.awt.Font("Palatino Linotype", 0, 11)); // NOI18N
         nameText.setText("Phew... It's a: Village Dweller");
 
-        descText.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
+        descText.setFont(new java.awt.Font("Palatino Linotype", 0, 11)); // NOI18N
         descText.setText("Maybe we can help eachother out.");
 
-        numCoinsText.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
+        numCoinsText.setFont(new java.awt.Font("Palatino Linotype", 0, 11)); // NOI18N
         numCoinsText.setText("You check your pockets and find that you have 325 coins.");
 
-        offeringText.setFont(new java.awt.Font("Palatino Linotype", 0, 12)); // NOI18N
+        offeringText.setFont(new java.awt.Font("Palatino Linotype", 0, 11)); // NOI18N
         offeringText.setText("The Village Dweller offers you a selection of items:");
 
         inventoryList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -140,7 +141,7 @@ public class MerchantView extends javax.swing.JPanel {
         selectedItemHolder.setLayout(selectedItemHolderLayout);
         selectedItemHolderLayout.setHorizontalGroup(
             selectedItemHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 366, Short.MAX_VALUE)
         );
         selectedItemHolderLayout.setVerticalGroup(
             selectedItemHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,39 +168,50 @@ public class MerchantView extends javax.swing.JPanel {
         invFullLabel.setForeground(new java.awt.Color(255, 153, 153));
         invFullLabel.setText("Inventory Full");
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Merchant");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(selectedItemHolder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(offeringText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(numCoinsText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(descText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(nameText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(32, 32, 32)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel1)
+                                    .addComponent(offeringText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(numCoinsText, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                                    .addComponent(descText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(nameText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(selectedItemHolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(94, 94, 94)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(invFullLabel)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(purchaseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(leaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(invFullLabel)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(purchaseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(leaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(93, 93, 93))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addGap(16, 16, 16)
+                .addComponent(jLabel2)
+                .addGap(12, 12, 12)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(nameText)
@@ -209,17 +221,17 @@ public class MerchantView extends javax.swing.JPanel {
                 .addComponent(numCoinsText)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(offeringText)
-                .addGap(30, 30, 30)
+                .addGap(24, 24, 24)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(selectedItemHolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(leaveButton)
                     .addComponent(purchaseButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(invFullLabel)
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -266,6 +278,7 @@ public class MerchantView extends javax.swing.JPanel {
     private javax.swing.JLabel invFullLabel;
     private javax.swing.JList<String> inventoryList;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton leaveButton;
     private javax.swing.JLabel nameText;
