@@ -16,6 +16,7 @@ public class GameplayView extends javax.swing.JPanel {
         disableButtons();
     }
 
+    /* Adds text to the text area and auto scrolls */
     public void addText(String text) {
         textArea.append(text);
         textArea.setCaretPosition(textArea.getDocument().getLength()); // auto scroll

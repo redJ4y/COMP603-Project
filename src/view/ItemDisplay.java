@@ -1,5 +1,8 @@
 package view;
 
+/*
+The ItemDisplay is used within other JPanel Forms.
+ */
 // @author jared
 import model.entity.Armor;
 import model.entity.Item;
@@ -29,6 +32,7 @@ public class ItemDisplay extends javax.swing.JPanel {
         setItem(item);
     }
 
+    /* Change the item being displayed */
     public void setItem(Item item) { // can be called again after instantiated
         if (item instanceof Weapon) {
             JLabel iconWrapper = new JLabel(weaponIcon, JLabel.CENTER);

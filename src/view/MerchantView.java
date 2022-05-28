@@ -41,6 +41,7 @@ public class MerchantView extends javax.swing.JPanel {
         inventoryPrices = new ArrayList<>(1); // default value to avoid errors
     }
 
+    /* Prepare the panel with new information */
     public void prepPanel(Merchant merchant, int coins, boolean invFull) {
         inventoryItems = merchant.getItems();
         inventoryPrices = merchant.getPrices();

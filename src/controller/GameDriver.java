@@ -1,7 +1,9 @@
 package controller;
 
 /*
-GameDriver ... (description)
+GameDriver handles gameplay, taking input from the view and updating the model.
+- The game driver keeps track of the current game state (what is happening) and updates the view accordingly.
+- The game driver updates the model immediately and enqueues updates for the view to process in time.
  */
 // @author Jared Scholz
 import model.data.DBManager;
@@ -27,11 +29,6 @@ import model.map.Scene;
 import model.map.Trap;
 import view.GameplayButtons;
 
-/*
-TODO:
-Go over every class adding comments (need method/class comments!)
-Remove unnecessary stuff (like devtools, old game data, and oldgamedriver)
- */
 public class GameDriver {
 
     public final static int MAP_SIZE = 17; // should not be changed
@@ -63,6 +60,7 @@ public class GameDriver {
         enemyInitialHealth = 1;
     }
 
+    /* Displays the GUI */
     public void runGame() {
         viewManager.display(); // prompts the pregame menu first
         // prepare gameplay view:
@@ -91,7 +89,7 @@ public class GameDriver {
         currentEnemy = null;
     }
 
-    /* ----- User input methods below ----- */
+    /* The user has selected an item to purchase from a merchant */
     public void purchaseFromMerchant(int index) {
         if (currentMerchant != null) { // validate current game state
             if (player.getInventory().hasSpace()) { // this was already validated (good measure)
@@ -105,6 +103,7 @@ public class GameDriver {
         }
     }
 
+    /* The user has defeated an enemy and chosen to collect the loot */
     public void collectEnemyLoot() {
         if (currentEnemy != null) { // validate current game state
             if (player.getInventory().hasSpace()) { // this was already validated (good measure)
@@ -116,6 +115,7 @@ public class GameDriver {
         }
     }
 
+    /* The user has selected to use an inventory item */
     public void inventoryEquipOrConsume(int index) {
         Inventory inventory = player.getInventory();
         // index was already validated - do it again for good measure:
@@ -125,6 +125,7 @@ public class GameDriver {
         viewManager.updatePlayerInfoDirectly(player); // update immediately
     }
 
+    /* The user has selected to drop an inventory item */
     public void inventoryDrop(int index) {
         Inventory inventory = player.getInventory();
         // index was already validated - do it again for good measure:
@@ -132,7 +133,7 @@ public class GameDriver {
             inventory.remove(index);
         }
         viewManager.updatePlayerInfoDirectly(player); // update immediately
-    } // ----- End user input methods -----
+    }
 
     /* ----- Gameplay methods below ----- */
     public void adventure() {
@@ -140,6 +141,7 @@ public class GameDriver {
         viewManager.enableGameplayButtons(Arrays.asList(GameplayButtons.N, GameplayButtons.E, GameplayButtons.S, GameplayButtons.W));
     }
 
+    /* The user has selected a direction to look */
     public void look(Direction lookDirection) {
         lookDirectionString = lookDirection.toString();
         lookToPosition = lookDirection.getChange(player.getPosition());
@@ -157,6 +159,7 @@ public class GameDriver {
         }
     }
 
+    /* The user has chosen to go to lookToPosition */
     public void goDirection() {
         if (lookToPosition != null) { // validate current game state
             player.move(lookToPosition);
@@ -167,11 +170,13 @@ public class GameDriver {
         }
     }
 
+    /* The user intends to select a different direction to look */
     public void pickNewDirection() {
         viewManager.displayTextLine("Maybe a different direction would be better.");
         adventure();
     }
 
+    /* The user has chosen to attack the current enemy */
     public void attack() {
         doPlayerTurn();
         doEnemyTurn();
@@ -182,6 +187,7 @@ public class GameDriver {
         }
     }
 
+    /* The user has chosen to run away from the current enemy */
     public void runAway() {
         if (currentEnemy != null) { // validate current game state
             viewManager.displayTextLine("You turn and run.");
@@ -255,7 +261,7 @@ public class GameDriver {
         }
     }
 
-    /* Alternate between the players turn and the enemies turn until one dies (or run) */
+    /* Alternate between the players turn and the enemies turn until one dies (or runs) */
     private void encounterBattle(Enemy enemy) {
         currentEnemy = enemy;
         enemyInitialHealth = enemy.getStats().getHealth();
@@ -407,7 +413,7 @@ public class GameDriver {
             gameMap = null; // to be re-initialized
             player = null; // to be re-initialized
             printSlowTransition();
-            viewManager.displayTextLine("(Returning to pre-game menu)");
+            viewManager.displayTextLine("> Returning to pre-game menu...");
 
             // wait until all text is displayed...
             GameDriver thisReference = this; // for use within the timer task

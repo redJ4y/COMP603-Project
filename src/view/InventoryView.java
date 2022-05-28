@@ -51,6 +51,7 @@ public class InventoryView extends javax.swing.JPanel {
         inventoryItems = new ArrayList<>(1); // default value to avoid errors
     }
 
+    /* Updates all displayed information given an updated Player */
     public void updateInventory(Player player) {
         Inventory inventory = player.getInventory();
         inventoryItems = inventory.getItems();
@@ -318,7 +319,7 @@ public class InventoryView extends javax.swing.JPanel {
         int selectedIndex = inventoryList.getSelectedIndex();
         disableButtons(); // quickly disable buttons
         if (selectedIndex >= 0 && selectedIndex < inventoryItems.size()) { // validate
-            if (!confirmDrop && (selectedIndex == eqWeaponIndex || selectedIndex == eqWeaponIndex)) {
+            if (!confirmDrop && (selectedIndex == eqWeaponIndex || selectedIndex == eqArmorIndex)) {
                 confirmDrop = true; // require confirmation
                 selectedItem.becomeLabel("Item equipped! Press drop again to confirm.");
                 dropButton.setEnabled(true); // re-enable drop button

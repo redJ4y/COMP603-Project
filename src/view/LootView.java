@@ -22,6 +22,7 @@ public class LootView extends javax.swing.JPanel {
         item.setAsEmptySlot();
     }
 
+    /* Prepare the panel with new information */
     public void prepPanel(Item loot, int numCoins, boolean invFull) {
         numCoinsText.setText("You search the corpse and find " + numCoins + " coins!");
         item.setItem(loot);

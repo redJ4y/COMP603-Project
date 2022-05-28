@@ -35,6 +35,7 @@ public class MapView extends javax.swing.JPanel {
         mapHolder.add(mapDrawPanel, BorderLayout.CENTER);
     }
 
+    /* Re-draws an updated map */
     public void updateMap(TravelMap map, Point currentPosition) {
         this.map = map;
         this.currentPosition = currentPosition;
@@ -77,6 +78,7 @@ public class MapView extends javax.swing.JPanel {
             }
         }
 
+        /* Returns a color according to what is in the TravelMap */
         private Color getDotColor(int x, int y) {
             if (y == currentPosition.x && x == currentPosition.y) {
                 return CURRENT_COLOR;

@@ -1,5 +1,12 @@
 package model.data;
 
+/*
+The DBManager is responsible for:
+    checking for game saves,
+    loading game saves,
+    loading all game data,
+    and saving games.
+ */
 // @author Jared Scholz
 import model.entity.Armor;
 import model.entity.EntityStats;
@@ -59,12 +66,13 @@ public class DBManager {
         allScenes = new ArrayList<>();
     }
 
+    /* Connect to the database (held for the duration of the program) */
     private void establishConnection() {
         try {
             connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
         } catch (SQLException ex) {
             System.out.println("ERROR: COULD NOT CONNECT TO DATABASE");
-            System.out.println("Close existing instances and try again.");
+            System.out.println("Close existing instances of the game and try again.");
             System.out.println(ex.getMessage());
         }
     }
@@ -96,6 +104,7 @@ public class DBManager {
         return alreadyExists;
     }
 
+    /* Saves the game - overwrites an existing save or creates a new save */
     public void saveGame(GameMap gameMap, Player player) {
         if (username != null) {
             // quickly check if the record already exists (do not reuse the result of the earlier check):
@@ -141,17 +150,21 @@ public class DBManager {
         }
     }
 
+    /* Deletes the game save of the current user */
     public void deleteGameSave() {
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("DELETE FROM SAVES WHERE USERNAME = '" + username + "'");
-            statement.close();
-        } catch (SQLException ex) {
-            System.out.println("ERROR DELETING GAME SAVE");
-            System.out.println(ex.getMessage());
+        if (username != null) {
+            try {
+                Statement statement = connection.createStatement();
+                statement.executeUpdate("DELETE FROM SAVES WHERE USERNAME = '" + username + "'");
+                statement.close();
+            } catch (SQLException ex) {
+                System.out.println("ERROR DELETING GAME SAVE");
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
+    /* Returns the GameMap from the saved game */
     public GameMap getExistingMap() {
         if (username == null) {
             return null; // checkGameSave not yet called (this should never occur)
@@ -159,11 +172,217 @@ public class DBManager {
         return readExistingGameMap();
     }
 
+    /* Returns the Player from the saved game */
     public Player getExistingPlayer() {
         if (username == null) {
             return null; // checkGameSave not yet called (this should never occur)
         }
         return new Player(username, readExistingStats(), readExistingPosition(), readExistingTravelMap(), readExistingInventory(), readExistingCoins());
+    }
+
+    /* Loads everything from the database into memory */
+    // This is necessary for map generation speed
+    public void initializeData() {
+        loadItems();
+        loadEnemies();
+        loadMerchants();
+        loadPassiveEvents();
+        loadTraps();
+        loadScenes();
+    }
+
+    private void loadItems() { // extension of initializeData
+        loadArmor();
+        loadPotions();
+        loadWeapons();
+    }
+
+    private void loadArmor() {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM ARMOR");
+
+            while (rs.next()) {
+                String name = rs.getString("NAME");
+                String description = rs.getString("DESCRIPT");
+                int rarity = rs.getInt("RARITY");
+                int protection = rs.getInt("PROT");
+                int agility = rs.getInt("AGIL");
+                int durability = rs.getInt("DUR");
+                allItems.add(new Armor(name, description, rarity, protection, agility, durability));
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("ERROR LOADING ARMOR");
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void loadPotions() {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM POTIONS");
+
+            while (rs.next()) {
+                String name = rs.getString("NAME");
+                String description = rs.getString("DESCRIPT");
+                int rarity = rs.getInt("RARITY");
+                StatType stat = StatType.valueOf(rs.getString("STAT"));
+                int modification = rs.getInt("MOD");
+                allItems.add(new Potion(name, description, rarity, stat, modification));
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("ERROR LOADING POTIONS");
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void loadWeapons() {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM WEAPONS");
+
+            while (rs.next()) {
+                String name = rs.getString("NAME");
+                String description = rs.getString("DESCRIPT");
+                int rarity = rs.getInt("RARITY");
+                String[] damageRange = rs.getString("DMG").split(",", 2);
+                int damageMin = Integer.parseInt(damageRange[0]);
+                int damageMax = Integer.parseInt(damageRange[1]);
+                int armorPiercing = rs.getInt("AP");
+                int durability = rs.getInt("DUR");
+                allItems.add(new Weapon(name, description, rarity, damageMin, damageMax, armorPiercing, durability));
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("ERROR LOADING WEAPONS");
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void loadEnemies() {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM ENEMIES");
+
+            while (rs.next()) {
+                String name = rs.getString("NAME");
+                String description = rs.getString("DESCRIPT");
+                EnemyType type = EnemyType.valueOf(rs.getString("TYPE"));
+                int rarity = rs.getInt("RARITY");
+                String[] damageRange = rs.getString("DMG").split(",", 2);
+                int damageMin = Integer.parseInt(damageRange[0]);
+                int damageMax = Integer.parseInt(damageRange[1]);
+                int hp = rs.getInt("HP");
+                int apm = rs.getInt("APM");
+                int prot = rs.getInt("PROT");
+                int agil = rs.getInt("AGIL");
+                allEnemies.add(new Enemy(name, description, type, rarity, damageMin, damageMax, hp, apm, prot, agil));
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("ERROR LOADING ENEMIES");
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void loadMerchants() {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM MERCHANTS");
+
+            while (rs.next()) {
+                String name = rs.getString("NAME");
+                String description = rs.getString("DESCRIPT");
+                int invrarity = rs.getInt("INVRARITY");
+                allMerchants.add(new Merchant(name, description, invrarity));
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("ERROR LOADING MERCHANTS");
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void loadPassiveEvents() {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM PASSIVEEVENTS");
+
+            while (rs.next()) {
+                String description = rs.getString("DESCRIPT");
+                int hpBonus = rs.getInt("HP");
+                allPassiveEvents.add(new PassiveEvent(description, hpBonus));
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("ERROR LOADING PASSIVEEVENTS");
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void loadTraps() {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM TRAPS");
+
+            while (rs.next()) {
+                String description = rs.getString("DESCRIPT");
+                StatType stat = StatType.valueOf(rs.getString("STAT"));
+                int modification = rs.getInt("MOD");
+                allTraps.add(new Trap(description, stat, modification));
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("ERROR LOADING TRAPS");
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void loadScenes() {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM SCENES");
+
+            while (rs.next()) {
+                String view = rs.getString("SCENEVIEW");
+                String description = rs.getString("DESCRIPT");
+                EnemyType enemyType = EnemyType.valueOf(rs.getString("ENEM"));
+                Scene currentScene = new Scene(view, description, enemyType);
+
+                if (Boolean.parseBoolean(rs.getString("TRAP"))) {
+                    String trapDescription = rs.getString("TRAPDESCRIPT");
+                    StatType trapStat = StatType.valueOf(rs.getString("TRAPSTAT"));
+                    int trapModification = rs.getInt("TRAPMOD");
+                    currentScene.addTrap(new Trap(trapDescription, trapStat, trapModification));
+                }
+                if (Boolean.parseBoolean(rs.getString("MERCH"))) {
+                    String merchantName = rs.getString("MERCHNAME");
+                    String merchantDescription = rs.getString("MERCHDESCRIPT");
+                    int merchantInvrarity = rs.getInt("MERCHINVRARITY");
+                    currentScene.addMerchant(new Merchant(merchantName, merchantDescription, merchantInvrarity));
+                }
+                if (Boolean.parseBoolean(rs.getString("PE"))) {
+                    String passiveEventDescription = rs.getString("PEDESCRIPT");
+                    int passiveEventHpBonus = rs.getInt("PEHP");
+                    currentScene.addPassiveEvent(new PassiveEvent(passiveEventDescription, passiveEventHpBonus));
+                }
+                allScenes.add(currentScene);
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("ERROR LOADING SCENES");
+            System.out.println(ex.getMessage());
+        }
     }
 
     private boolean saveGameMap(GameMap gameMap) {
@@ -432,209 +651,6 @@ public class DBManager {
             System.exit(0);
         }
         return coins;
-    }
-
-    public void initializeData() {
-        loadItems();
-        loadEnemies();
-        loadMerchants();
-        loadPassiveEvents();
-        loadTraps();
-        loadScenes();
-    }
-
-    private void loadItems() {
-        loadArmor();
-        loadPotions();
-        loadWeapons();
-    }
-
-    private void loadArmor() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM ARMOR");
-
-            while (rs.next()) {
-                String name = rs.getString("NAME");
-                String description = rs.getString("DESCRIPT");
-                int rarity = rs.getInt("RARITY");
-                int protection = rs.getInt("PROT");
-                int agility = rs.getInt("AGIL");
-                int durability = rs.getInt("DUR");
-                allItems.add(new Armor(name, description, rarity, protection, agility, durability));
-            }
-            rs.close();
-            statement.close();
-        } catch (SQLException ex) {
-            System.out.println("ERROR LOADING ARMOR");
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    private void loadPotions() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM POTIONS");
-
-            while (rs.next()) {
-                String name = rs.getString("NAME");
-                String description = rs.getString("DESCRIPT");
-                int rarity = rs.getInt("RARITY");
-                StatType stat = StatType.valueOf(rs.getString("STAT"));
-                int modification = rs.getInt("MOD");
-                allItems.add(new Potion(name, description, rarity, stat, modification));
-            }
-            rs.close();
-            statement.close();
-        } catch (SQLException ex) {
-            System.out.println("ERROR LOADING POTIONS");
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    private void loadWeapons() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM WEAPONS");
-
-            while (rs.next()) {
-                String name = rs.getString("NAME");
-                String description = rs.getString("DESCRIPT");
-                int rarity = rs.getInt("RARITY");
-                String[] damageRange = rs.getString("DMG").split(",", 2);
-                int damageMin = Integer.parseInt(damageRange[0]);
-                int damageMax = Integer.parseInt(damageRange[1]);
-                int armorPiercing = rs.getInt("AP");
-                int durability = rs.getInt("DUR");
-                allItems.add(new Weapon(name, description, rarity, damageMin, damageMax, armorPiercing, durability));
-            }
-            rs.close();
-            statement.close();
-        } catch (SQLException ex) {
-            System.out.println("ERROR LOADING WEAPONS");
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    private void loadEnemies() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM ENEMIES");
-
-            while (rs.next()) {
-                String name = rs.getString("NAME");
-                String description = rs.getString("DESCRIPT");
-                EnemyType type = EnemyType.valueOf(rs.getString("TYPE"));
-                int rarity = rs.getInt("RARITY");
-                String[] damageRange = rs.getString("DMG").split(",", 2);
-                int damageMin = Integer.parseInt(damageRange[0]);
-                int damageMax = Integer.parseInt(damageRange[1]);
-                int hp = rs.getInt("HP");
-                int apm = rs.getInt("APM");
-                int prot = rs.getInt("PROT");
-                int agil = rs.getInt("AGIL");
-                allEnemies.add(new Enemy(name, description, type, rarity, damageMin, damageMax, hp, apm, prot, agil));
-            }
-            rs.close();
-            statement.close();
-        } catch (SQLException ex) {
-            System.out.println("ERROR LOADING ENEMIES");
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    private void loadMerchants() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM MERCHANTS");
-
-            while (rs.next()) {
-                String name = rs.getString("NAME");
-                String description = rs.getString("DESCRIPT");
-                int invrarity = rs.getInt("INVRARITY");
-                allMerchants.add(new Merchant(name, description, invrarity));
-            }
-            rs.close();
-            statement.close();
-        } catch (SQLException ex) {
-            System.out.println("ERROR LOADING MERCHANTS");
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    private void loadPassiveEvents() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM PASSIVEEVENTS");
-
-            while (rs.next()) {
-                String description = rs.getString("DESCRIPT");
-                int hpBonus = rs.getInt("HP");
-                allPassiveEvents.add(new PassiveEvent(description, hpBonus));
-            }
-            rs.close();
-            statement.close();
-        } catch (SQLException ex) {
-            System.out.println("ERROR LOADING PASSIVEEVENTS");
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    private void loadTraps() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM TRAPS");
-
-            while (rs.next()) {
-                String description = rs.getString("DESCRIPT");
-                StatType stat = StatType.valueOf(rs.getString("STAT"));
-                int modification = rs.getInt("MOD");
-                allTraps.add(new Trap(description, stat, modification));
-            }
-            rs.close();
-            statement.close();
-        } catch (SQLException ex) {
-            System.out.println("ERROR LOADING TRAPS");
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    private void loadScenes() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM SCENES");
-
-            while (rs.next()) {
-                String view = rs.getString("SCENEVIEW");
-                String description = rs.getString("DESCRIPT");
-                EnemyType enemyType = EnemyType.valueOf(rs.getString("ENEM"));
-                Scene currentScene = new Scene(view, description, enemyType);
-
-                if (Boolean.parseBoolean(rs.getString("TRAP"))) {
-                    String trapDescription = rs.getString("TRAPDESCRIPT");
-                    StatType trapStat = StatType.valueOf(rs.getString("TRAPSTAT"));
-                    int trapModification = rs.getInt("TRAPMOD");
-                    currentScene.addTrap(new Trap(trapDescription, trapStat, trapModification));
-                }
-                if (Boolean.parseBoolean(rs.getString("MERCH"))) {
-                    String merchantName = rs.getString("MERCHNAME");
-                    String merchantDescription = rs.getString("MERCHDESCRIPT");
-                    int merchantInvrarity = rs.getInt("MERCHINVRARITY");
-                    currentScene.addMerchant(new Merchant(merchantName, merchantDescription, merchantInvrarity));
-                }
-                if (Boolean.parseBoolean(rs.getString("PE"))) {
-                    String passiveEventDescription = rs.getString("PEDESCRIPT");
-                    int passiveEventHpBonus = rs.getInt("PEHP");
-                    currentScene.addPassiveEvent(new PassiveEvent(passiveEventDescription, passiveEventHpBonus));
-                }
-                allScenes.add(currentScene);
-            }
-            rs.close();
-            statement.close();
-        } catch (SQLException ex) {
-            System.out.println("ERROR LOADING SCENES");
-            System.out.println(ex.getMessage());
-        }
     }
 
     public List<Item> getAllItems() {

@@ -1,5 +1,10 @@
 package view;
 
+/*
+The ViewManager manages all view components and all interaction with the controller.
+It creates the frame and populates it. All JPanel Forms interact only with the ViewManager.
+The ViewManager processes tasks given by the controller (stored in a BlockingDeque).
+ */
 // @author Jared Scholz
 import controller.Direction;
 import controller.GameDriver;
@@ -91,6 +96,7 @@ public class ViewManager extends JPanel {
         return tasks.size();
     }
 
+    /* Displays the GUI and starts the task running thread */
     public void display() {
         JFrame frame = new JFrame("RPG Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -111,6 +117,7 @@ public class ViewManager extends JPanel {
         thread.start();
     }
 
+    /* Prepares all elements of the GUI */
     private void initializePanels() {
         // set up the two sides/areas (gameArea and playerArea):
         gameArea = new JPanel(new CardLayout());
@@ -151,6 +158,7 @@ public class ViewManager extends JPanel {
         playerArea.setVisible(false);
     }
 
+    /* Replaces the pre-game menu with the game */
     private void hidePregameMenu() {
         pregameMenu.setVisible(false);
         super.remove(pregameMenu);
@@ -158,6 +166,7 @@ public class ViewManager extends JPanel {
         playerArea.setVisible(true);
     }
 
+    /* Switches the game area to a selected game area option */
     private void setGameArea(GameAreaOptions card) {
         ((CardLayout) gameArea.getLayout()).show(gameArea, card.name());
     }
@@ -233,6 +242,7 @@ public class ViewManager extends JPanel {
         });
     } // only the selected button will be enabled
 
+    /* Adds a task to switch to the merchant game area option */
     public void setMerchant(Merchant merchant, int coins, boolean invFull) {
         tasks.addLast((Runnable) () -> {
             merchantView.prepPanel(merchant, coins, invFull);
@@ -240,6 +250,7 @@ public class ViewManager extends JPanel {
         });
     }
 
+    /* Adds a task to switch to the loot game area option */
     public void setLoot(Item loot, int numCoins, boolean invFull) {
         tasks.addLast((Runnable) () -> {
             lootView.prepPanel(loot, numCoins, invFull);
@@ -247,6 +258,7 @@ public class ViewManager extends JPanel {
         });
     }
 
+    /* Adds a waiting time to the task queue */
     public void addDelay(int ms) {
         tasks.addLast((Runnable) () -> {
             try {
