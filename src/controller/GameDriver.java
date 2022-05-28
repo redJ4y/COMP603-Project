@@ -29,7 +29,6 @@ import view.GameplayButtons;
 
 /*
 TODO:
-Do 5 test cases (well named, covering important functionality)
 Go over every class adding comments (need method/class comments!)
 Remove unnecessary stuff (like devtools, old game data, and oldgamedriver)
  */

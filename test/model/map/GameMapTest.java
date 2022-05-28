@@ -1,6 +1,8 @@
 package model.map;
 
+import controller.GameDriver;
 import java.awt.Point;
+import model.data.DBManager;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -13,6 +15,8 @@ import static org.junit.Assert.*;
  * @author jared
  */
 public class GameMapTest {
+
+    private GameMap map;
 
     public GameMapTest() {
     }
@@ -27,6 +31,9 @@ public class GameMapTest {
 
     @Before
     public void setUp() {
+        DBManager dataKeeper = new DBManager();
+        dataKeeper.initializeData();
+        map = new GameMap(GameDriver.MAP_SIZE, dataKeeper);
     }
 
     @After
@@ -34,18 +41,32 @@ public class GameMapTest {
     }
 
     /**
-     * Test of getScene method, of class GameMap.
+     * Test that map was initialized correctly.
      */
     @Test
-    public void testGetScene() {
-        System.out.println("getScene");
-        Point position = null;
-        GameMap instance = null;
-        Scene expResult = null;
-        Scene result = instance.getScene(position);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testMapInitialized() {
+        System.out.println("testMapInitialized");
+        // go through every cell...
+        for (int i = 0; i < GameDriver.MAP_SIZE; i++) {
+            for (int j = 0; j < GameDriver.MAP_SIZE; j++) {
+                Scene scene = map.getScene(new Point(i, j));
+
+                // make sure the scene can select an event
+                assertNotSame(null, scene.pickEvent());
+                // make sure the scene was given view text
+                assertNotSame(null, scene.getView());
+                // make sure the scene was given description text
+                assertNotSame(null, scene.getDescription());
+                // make sure the EnemyType was read correctly
+                assertTrue(scene.getEnemyType() instanceof EnemyType);
+                // make sure there is at least 1 possible trap
+                assertTrue(!scene.getPossibleTraps().isEmpty());
+                // make sure there is at least 1 possible merchant
+                assertTrue(!scene.getPossibleMerchants().isEmpty());
+                // make sure there is at least 1 possible passive event
+                assertTrue(!scene.getPossiblePassiveEvents().isEmpty());
+            }
+        }
     }
 
 }
