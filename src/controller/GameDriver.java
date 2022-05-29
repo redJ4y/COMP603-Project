@@ -407,7 +407,7 @@ public class GameDriver {
             viewManager.displayTextLine("Game over!");
             printSlowTransition();
             viewManager.displayTextLine("Progress lost!");
-            viewManager.disablePlayerInfoDirectly(); // BLOCK FURTHER INTERACTION
+            viewManager.disableUserInteraction(); // BLOCK FURTHER INTERACTION
             dataKeeper.deleteGameSave();
             // block the player from saving on close:
             gameMap = null; // to be re-initialized

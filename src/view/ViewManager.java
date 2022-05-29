@@ -200,8 +200,11 @@ public class ViewManager extends JPanel {
         });
     }
 
-    public void disablePlayerInfoDirectly() { // direct
+    public void disableUserInteraction() { // direct
         // does not wait for other tasks to complete (addFirst)
+        tasks.addFirst((Runnable) () -> {
+            gameplayView.disableUserInteraction();
+        });
         tasks.addFirst((Runnable) () -> {
             inventoryView.setEnabled(false);
             statsView.setEnabled(false);

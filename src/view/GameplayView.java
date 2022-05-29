@@ -6,6 +6,7 @@ import java.util.List;
 public class GameplayView extends javax.swing.JPanel {
 
     private final ViewManager viewManager;
+    private boolean disableInteraction; // whether or not buttons may be enabled
 
     /**
      * Creates new form GameplayView
@@ -14,6 +15,7 @@ public class GameplayView extends javax.swing.JPanel {
         this.viewManager = viewManager;
         initComponents();
         disableButtons();
+        disableInteraction = false;
     }
 
     /* Adds text to the text area and auto scrolls */
@@ -24,37 +26,45 @@ public class GameplayView extends javax.swing.JPanel {
 
     public void enableButtons(List<GameplayButtons> buttons) {
         disableButtons(); // for good measure, should already be disabled
-        for (GameplayButtons current : buttons) {
-            switch (current) {
-                case N:
-                    northButton.setEnabled(true);
-                    break;
-                case E:
-                    eastButton.setEnabled(true);
-                    break;
-                case S:
-                    southButton.setEnabled(true);
-                    break;
-                case W:
-                    westButton.setEnabled(true);
-                    break;
-                case YES:
-                    yesButton.setEnabled(true);
-                    break;
-                case NO:
-                    noButton.setEnabled(true);
-                    break;
-                case ADVENTURE:
-                    adventureButton.setEnabled(true);
-                    break;
-                case ATTACK:
-                    attackButton.setEnabled(true);
-                    break;
-                case RUN:
-                    runButton.setEnabled(true);
-                    break;
+        if (!disableInteraction) {
+            for (GameplayButtons current : buttons) {
+                switch (current) {
+                    case N:
+                        northButton.setEnabled(true);
+                        break;
+                    case E:
+                        eastButton.setEnabled(true);
+                        break;
+                    case S:
+                        southButton.setEnabled(true);
+                        break;
+                    case W:
+                        westButton.setEnabled(true);
+                        break;
+                    case YES:
+                        yesButton.setEnabled(true);
+                        break;
+                    case NO:
+                        noButton.setEnabled(true);
+                        break;
+                    case ADVENTURE:
+                        adventureButton.setEnabled(true);
+                        break;
+                    case ATTACK:
+                        attackButton.setEnabled(true);
+                        break;
+                    case RUN:
+                        runButton.setEnabled(true);
+                        break;
+                }
             }
         }
+    }
+
+    public void disableUserInteraction() {
+        disableButtons();
+        quitButton.setEnabled(false);
+        disableInteraction = true;
     }
 
     private void disableButtons() {
